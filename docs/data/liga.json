@@ -1,0 +1,19 @@
+{
+  "players": [
+    {"id":"djordje",  "name":"Đorđe Trifunović", "pts":0, "lw":0, "ll":0, "bio":"Najvoli da svira TAMBURELO!"},
+    {"id":"milos",    "name":"Miloš Ivković",    "pts":0, "lw":0, "ll":0, "bio":"Ovaj mali je opasan!"},
+    {"id":"bojanm",   "name":"Bojan Majkić",     "pts":0, "lw":0, "ll":0, "bio":"Bato je inače Judo trener!"},
+    {"id":"dejan",    "name":"Dejan Marković",   "pts":0, "lw":0, "ll":0, "bio":"On je sa Oficirca!"},
+    {"id":"goran",    "name":"Goran Cimeša",     "pts":0, "lw":0, "ll":0, "bio":"Veteran, od boćanja su mu muda kao kugle!"},
+    {"id":"bojanp",   "name":"Bojan Milanović",  "pts":0, "lw":0, "ll":0, "bio":"Zna da napravi PROBLEMOVE!"},
+    {"id":"leonardo", "name":"Leonardo Giric",   "pts":0, "lw":0, "ll":0, "bio":"Zašto ga zovu Kenjac?"},
+    {"id":"dalibor",  "name":"Dalibor Giric",    "pts":0, "lw":0, "ll":0, "bio":"Smirena ruka!"}
+  ],
+  "koloNum": 1,
+  "koloMatchups": {},
+  "matches": [],
+  "archive": [],
+  "playoff": { "semis": [], "final": null },
+  "seasonStart": "2026-09-09",
+  "scheduleIntervalDays": 7
+}

@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peta Pikado INVENDA Liga 2026–2027</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --darker:#06060e; --card:#12121e; --card2:#1a1a2e;
+      --gold:#f0b429; --gold2:#e09418; --silver:#a8b2c1; --bronze:#cd7f40;
+      --accent:#e63946; --green:#2dc653; --blue:#3a86ff;
+      --text:#f0f0f0; --muted:#7a7a9a;
+      --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+    }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family:'Barlow',sans-serif; background:var(--darker); color:var(--text);
+      min-height:100vh;
+      background-image:
+        radial-gradient(ellipse 60% 40% at 20% 10%, rgba(230,57,70,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 50% 50% at 80% 90%, rgba(58,134,255,0.05) 0%, transparent 60%),
+        url("images/Pozadina.png");
+      background-size:cover; background-attachment:fixed;
+    }
+    header {
+      background:linear-gradient(180deg,rgba(6,6,14,0.98),rgba(10,10,18,0.92));
+      border-bottom:1px solid var(--border2); padding:0 24px;
+      position:sticky; top:0; z-index:100; backdrop-filter:blur(12px);
+    }
+    .header-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; height:64px; }
+    .logo-wrap { display:flex; align-items:center; gap:14px; }
+    .logo-wrap img { height:42px; }
+    .logo-text { line-height:1.1; }
+    .logo-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); }
+    .logo-sub { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+    .header-right { display:flex; align-items:center; gap:12px; }
+    #admin-badge { display:none; background:rgba(240,180,41,0.15); border:1px solid rgba(240,180,41,0.3); color:var(--gold); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; letter-spacing:1px; }
+    .hero { background:rgba(10,10,18,0.85); border-bottom:1px solid var(--border); padding:10px 24px; position:sticky; top:64px; z-index:98; backdrop-filter:blur(8px); }
+    .hero-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+    .hero-kolo { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
+    .progress-track { flex:1; min-width:120px; height:6px; border-radius:3px; background:rgba(255,255,255,0.08); overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold2)); transition:width .4s; }
+    nav { background:rgba(10,10,18,0.95); border-bottom:1px solid var(--border); position:sticky; top:108px; z-index:99; backdrop-filter:blur(8px); }
+    .nav-inner { max-width:960px; margin:0 auto; display:flex; overflow-x:auto; scrollbar-width:none; }
+    .nav-inner::-webkit-scrollbar { display:none; }
+    .tab-btn { background:none; border:none; color:var(--muted); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:14px 16px; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; }
+    .tab-btn:hover { color:var(--text); }
+    .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+    main { max-width:960px; margin:0 auto; padding:24px 16px 60px; }
+    .view { display:none; }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
+    .view.active { display:block; animation:fadeIn .25s ease; }
+    .lb-card { background:rgba(18,18,30,0.92); border:1px solid var(--border2); border-radius:16px; overflow:hidden; backdrop-filter:blur(8px); }
+    .lb-card-header { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .lb-card-header h2 { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+    .season-badge { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+    .lb-header-row, .lb-row { display:grid; grid-template-columns:40px 1fr 70px 60px 60px 60px 80px 70px; align-items:center; }
+    .lb-header-row { padding:10px 20px; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+    .lb-row { padding:13px 20px; border-bottom:1px solid var(--border); transition:background .15s; }
+    .lb-row:last-child { border-bottom:none; }
+    .lb-row:hover { background:rgba(255,255,255,0.03); }
+    .lb-row.playoff { background:rgba(45,198,83,0.04); }
+    .lb-row.playoff:hover { background:rgba(45,198,83,0.07); }
+    .lb-row.barraz { background:rgba(240,180,41,0.04); }
+    .lb-row.barraz:hover { background:rgba(240,180,41,0.07); }
+    .lb-rank { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--muted); }
+    .lb-rank.r1 { color:var(--gold); } .lb-rank.r2 { color:var(--silver); } .lb-rank.r3 { color:var(--bronze); }
+    .lb-name { font-size:15px; font-weight:500; display:flex; align-items:center; gap:6px; }
+    .lb-pts { font-family:'Bebas Neue',sans-serif; font-size:22px; text-align:center; }
+    .col-center { text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:600; }
+    .col-status { text-align:center; }
+    .playoff-pill { background:rgba(45,198,83,0.15); border:1px solid rgba(45,198,83,0.35); color:var(--green); font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; }
+    .barraz-pill { background:rgba(240,180,41,0.13); border:1px solid rgba(240,180,41,0.35); color:var(--gold); font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; }
+    .blue-pill { background:rgba(58,134,255,0.15); border:1px solid rgba(58,134,255,0.35); color:var(--blue); font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; }
+    .star-wrap { position:relative; display:inline-block; cursor:default; }
+    .star-icon { color:var(--gold); font-size:13px; line-height:1; }
+    .star-tooltip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:rgba(18,18,30,0.97); border:1px solid var(--border2); color:var(--gold); font-size:11px; font-weight:500; padding:5px 10px; border-radius:6px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .15s; z-index:50; }
+    .star-wrap:hover .star-tooltip { opacity:1; }
+    .trend { font-size:11px; margin-left:4px; }
+    .trend.up { color:var(--green); } .trend.down { color:var(--accent); }
+    .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+    .stat-card { background:rgba(18,18,30,0.9); border:1px solid var(--border2); border-radius:12px; padding:16px 18px; backdrop-filter:blur(8px); }
+    .stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
+    .stat-val { font-family:'Bebas Neue',sans-serif; font-size:32px; line-height:1; color:var(--gold); }
+    .stat-sub { font-size:11px; color:var(--muted); margin-top:3px; }
+    .matchup-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px; }
+    .matchup-card { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:10px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; }
+    .vs-badge { background:rgba(230,57,70,0.15); color:var(--accent); font-size:11px; font-weight:700; padding:2px 7px; border-radius:4px; flex-shrink:0; }
+    .players-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
+    .player-card { position:relative; background:rgba(18,18,30,0.92); border:1px solid var(--border2); border-radius:12px; padding:20px 16px; text-align:center; backdrop-filter:blur(8px); transition:transform .2s,border-color .2s; }
+    .player-card:hover { transform:translateY(-2px); border-color:rgba(240,180,41,0.3); }
+    .crown-badge { position:absolute; top:6px; left:50%; transform:translateX(-50%); font-size:20px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
+    .player-avatar { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; overflow:hidden; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:28px; }
+    .player-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+    .av-gold { background:rgba(240,180,41,0.15); border:2px solid var(--gold); color:var(--gold); }
+    .av-silver { background:rgba(168,178,193,0.15); border:2px solid var(--silver); color:var(--silver); }
+    .av-bronze { background:rgba(205,127,64,0.15); border:2px solid var(--bronze); color:var(--bronze); }
+    .av-default { background:rgba(255,255,255,0.07); border:2px solid var(--border2); color:var(--muted); }
+    .player-name { font-size:14px; font-weight:600; margin-bottom:4px; }
+    .player-pts { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--gold); line-height:1; }
+    .player-pts-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+    .player-bio { font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5; }
+    .player-mini-stats { display:flex; justify-content:center; gap:14px; margin-top:10px; font-size:11px; }
+    .player-mini-stats span { color:var(--muted); }
+    .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; padding:16px; }
+    .gallery-img { width:100%; aspect-ratio:4/3; object-fit:cover; border-radius:8px; cursor:pointer; transition:transform .2s,box-shadow .2s; border:1px solid var(--border); }
+    .gallery-img:hover { transform:scale(1.02); box-shadow:0 8px 32px rgba(0,0,0,0.5); }
+    .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:200; align-items:center; justify-content:center; padding:20px; cursor:zoom-out; }
+    .lightbox.open { display:flex; }
+    .lightbox img { max-width:95%; max-height:90%; border-radius:8px; box-shadow:0 12px 48px rgba(0,0,0,0.7); }
+    .lightbox-close { position:absolute; top:20px; right:24px; font-size:32px; color:#fff; cursor:pointer; line-height:1; }
+    .stream-box { width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#0e0e1a; display:flex; align-items:center; justify-content:center; }
+    .stream-offline-text { text-align:center; }
+    .login-wrap { display:flex; align-items:center; justify-content:center; min-height:400px; }
+    .login-card { background:var(--card); border:1px solid var(--border2); border-radius:16px; padding:36px 32px; width:340px; text-align:center; }
+    .login-icon { font-size:40px; margin-bottom:14px; }
+    .login-card h2 { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; letter-spacing:1px; margin-bottom:6px; }
+    .login-card p { font-size:13px; color:var(--muted); margin-bottom:20px; }
+    .login-card input { width:100%; padding:10px 14px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); border-radius:8px; color:var(--text); font-size:15px; outline:none; margin-bottom:10px; transition:border-color .2s; }
+    .login-card input:focus { border-color:rgba(240,180,41,0.4); }
+    .btn-login { width:100%; padding:11px; background:var(--gold); color:#000; border:none; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
+    .btn-login:hover { background:var(--gold2); }
+    .login-error { color:var(--accent); font-size:12px; margin-bottom:10px; display:none; }
+    .login-hint { font-size:11px; color:var(--muted); margin-top:14px; }
+    .login-info { font-size:11px; color:var(--muted); background:rgba(58,134,255,0.08); border:1px solid rgba(58,134,255,0.2); border-radius:8px; padding:10px 12px; margin-bottom:14px; text-align:left; line-height:1.5; }
+    .login-loading { font-size:12px; color:var(--gold); margin-bottom:10px; display:none; }
+    .admin-panel { display:none; }
+    .admin-section { background:var(--card); border:1px solid var(--border2); border-radius:12px; margin-bottom:20px; overflow:hidden; }
+    .admin-section-header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .admin-section-header h3 { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
+    .kolo-badge { background:rgba(240,180,41,0.15); color:var(--gold); font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid rgba(240,180,41,0.3); letter-spacing:.5px; }
+    .kolo-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); }
+    .kolo-cell { background:var(--card); padding:14px 16px; }
+    .kolo-player-name { font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+    .kolo-input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border2); border-radius:6px; padding:8px 10px; font-size:20px; font-family:'Bebas Neue',sans-serif; color:var(--gold); text-align:center; outline:none; transition:border-color .2s; }
+    .kolo-input:focus { border-color:rgba(240,180,41,0.5); }
+    .edit-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--border); }
+    .edit-cell { background:var(--card); padding:14px 16px; }
+    .edit-player-name { font-size:12px; color:var(--text); font-weight:600; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; }
+    .edit-inputs { display:flex; gap:6px; flex-wrap:wrap; }
+    .edit-input { flex:1; min-width:44px; background:rgba(255,255,255,0.05); border:1px solid var(--border2); border-radius:5px; padding:8px 4px; font-size:16px; font-family:'Bebas Neue',sans-serif; text-align:center; outline:none; transition:border-color .2s; color:var(--gold); }
+    .edit-input.lw-inp { color:var(--green); } .edit-input.ll-inp { color:var(--accent); }
+    .edit-input:focus { border-color:rgba(240,180,41,0.4); }
+    .edit-lbl { font-size:9px; color:var(--muted); text-align:center; margin-top:3px; letter-spacing:.5px; }
+    .matchup-input-row { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin-bottom:10px; }
+    .matchup-select { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border2); border-radius:6px; padding:8px 10px; color:var(--text); font-family:'Barlow',sans-serif; font-size:13px; outline:none; cursor:pointer; }
+    .matchup-vs { font-family:'Bebas Neue',sans-serif; font-size:14px; color:var(--accent); letter-spacing:1px; text-align:center; }
+    .save-kolo-btn { display:block; width:calc(100% - 32px); margin:12px 16px 16px; padding:11px; background:var(--gold); color:#000; border:none; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
+    .save-kolo-btn:hover { background:var(--gold2); }
+    .save-success { text-align:center; color:var(--green); font-size:12px; font-weight:600; padding:0 0 12px; display:none; }
+    .legend-row { padding:8px 16px 4px; font-size:11px; color:var(--muted); }
+    .logout-btn { padding:10px 20px; background:transparent; border:1px solid var(--border2); border-radius:8px; color:var(--muted); font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:600; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-bottom:20px; margin-right:8px; }
+    .logout-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .archive-round { border-bottom:1px solid var(--border); }
+    .archive-round:last-child { border-bottom:none; }
+    .archive-head { padding:14px 20px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; transition:background .15s; gap:10px; }
+    .archive-head:hover { background:rgba(255,255,255,0.03); }
+    .archive-head h4 { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; }
+    .archive-body { display:none; padding:0 20px 16px; }
+    .archive-body.open { display:block; }
+    .archive-table { width:100%; border-collapse:collapse; font-size:13px; }
+    .archive-table th { text-align:left; color:var(--muted); font-weight:600; padding:6px 8px; font-size:11px; text-transform:uppercase; letter-spacing:.5px; border-bottom:1px solid var(--border); }
+    .archive-table td { padding:7px 8px; border-bottom:1px solid var(--border); }
+    .archive-table tr:last-child td { border-bottom:none; }
+    .archive-matches { margin-top:12px; padding-top:12px; border-top:1px dashed var(--border); font-size:12px; color:var(--text); }
+    .archive-matches div { margin-bottom:4px; }
+    .stat-block { padding:16px 20px; border-bottom:1px solid var(--border); }
+    .stat-block:last-child { border-bottom:none; }
+    .stat-block h4 { font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+    .stat-bar-row { display:grid; grid-template-columns:130px 1fr 50px; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; }
+    .stat-bar-track { height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
+    .stat-bar-fill { height:100%; border-radius:4px; transition:width .4s; }
+    .bracket-semis { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
+    .bracket-match { background:var(--card2); border:1px solid var(--border2); border-radius:10px; padding:14px 16px; min-width:220px; flex:1; max-width:280px; }
+    .bm-row { display:flex; justify-content:space-between; padding:5px 0; font-size:14px; font-weight:500; }
+    .bm-row.winner { color:var(--green); font-weight:700; }
+    .h2h-picker { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin-bottom:16px; }
+    footer { text-align:center; padding:24px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); margin-top:40px; }
+    @media (max-width:600px) {
+      .lb-header-row, .lb-row { grid-template-columns:32px 1fr 54px 48px 48px 48px 64px 54px; padding:8px 10px; font-size:12px; }
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .kolo-grid { grid-template-columns:repeat(2,1fr); }
+      .edit-grid { grid-template-columns:1fr; }
+      .matchup-grid { grid-template-columns:1fr; }
+      .stat-bar-row { grid-template-columns:90px 1fr 40px; }
+      nav { top:100px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <img src="images/Logo.png" alt="Invenda" onerror="this.style.display='none'">
+      <div class="logo-text">
+        <div class="logo-title">🎯 Pikado INVENDA Liga</div>
+        <div class="logo-sub">Peta sezona · 2026–2027</div>
+      </div>
+    </div>
+    <div class="header-right"><span id="admin-badge">⚙ ADMIN</span></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-kolo" id="hero-kolo-label">Kolo 1 / 15</div>
+    <div class="progress-track"><div class="progress-fill" id="hero-progress" style="width:0%"></div></div>
+  </div>
+</div>
+
+<nav>
+  <div class="nav-inner">
+    <button class="tab-btn active" onclick="showTab('tabela')" id="tab-tabela">🏆 Tabela</button>
+    <button class="tab-btn" onclick="showTab('igraci')" id="tab-igraci">👤 Igrači</button>
+    <button class="tab-btn" onclick="showTab('mecevi')" id="tab-mecevi">🎯 Mečevi</button>
+    <button class="tab-btn" onclick="showTab('plejof')" id="tab-plejof">🥇 Plej-of</button>
+    <button class="tab-btn" onclick="showTab('arhiva')" id="tab-arhiva">📜 Arhiva</button>
+    <button class="tab-btn" onclick="showTab('statistika')" id="tab-statistika">📊 Statistika</button>
+    <button class="tab-btn" onclick="showTab('galerija')" id="tab-galerija">🖼️ Galerija</button>
+    <button class="tab-btn" onclick="showTab('stream')" id="tab-stream">🔴 Live</button>
+    <button class="tab-btn" onclick="showTab('admin')" id="tab-admin">🔐 Admin</button>
+  </div>
+</nav>
+
+<main>
+
+  <!-- TABELA -->
+  <div class="view active" id="view-tabela">
+    <div class="stats-row" id="stats-grid"></div>
+    <div class="lb-card">
+      <div class="lb-card-header"><h2>Tabela</h2><span class="season-badge">· Sezona 2026–2027</span></div>
+      <div class="lb-header-row">
+        <div>#</div><div>Igrač</div>
+        <div style="text-align:center">Bodovi</div>
+        <div style="text-align:center">Leg W</div>
+        <div style="text-align:center">Leg L</div>
+        <div style="text-align:center">+/−</div>
+        <div style="text-align:center">Preost.</div>
+        <div class="col-status" style="text-align:center">Status</div>
+      </div>
+      <div id="lb-body"></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;padding:0 4px">
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        <div style="width:10px;height:10px;border-radius:2px;background:rgba(45,198,83,0.25);border:1px solid rgba(45,198,83,0.4)"></div>Playoff (Top 4)
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)">
+        <div style="width:10px;height:10px;border-radius:2px;background:rgba(240,180,41,0.2);border:1px solid rgba(240,180,41,0.4)"></div>Baraž zona (5.–6.)
+      </div>
+    </div>
+  </div>
+
+  <!-- IGRAČI -->
+  <div class="view" id="view-igraci">
+    <div class="lb-card" style="margin-bottom:20px">
+      <div class="lb-card-header"><h2>Igrači</h2><span class="season-badge">· 8 igrača</span></div>
+    </div>
+    <div class="players-grid" id="players-grid"></div>
+  </div>
+
+  <!-- MEČEVI -->
+  <div class="view" id="view-mecevi">
+    <div class="lb-card" style="margin-bottom:20px">
+      <div class="lb-card-header"><h2>Mečevi kola</h2><span class="season-badge" id="mecevi-kolo-label">· Kolo 1</span></div>
+      <div class="matchup-grid" id="mecevi-grid">
+        <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px">Mečevi još nisu objavljeni. Pratite Admin panel.</div>
+      </div>
+    </div>
+    <div class="lb-card">
+      <div class="lb-card-header"><h2>Kalendar sezone</h2><span class="season-badge">· Svih 15 kola</span></div>
+      <div id="calendar-body"></div>
+    </div>
+  </div>
+
+  <!-- PLEJ-OF -->
+  <div class="view" id="view-plejof">
+    <div class="lb-card">
+      <div class="lb-card-header"><h2>🥇 Plej-of</h2><span class="season-badge">· Top 4 · Sezona 2026–2027</span></div>
+      <div id="plejof-body" style="padding:24px 16px"></div>
+    </div>
+  </div>
+
+  <!-- ARHIVA KOLA -->
+  <div class="view" id="view-arhiva">
+    <div class="lb-card">
+      <div class="lb-card-header"><h2>Arhiva kola</h2><span class="season-badge">· Rezultati svih odigranih kola</span></div>
+      <div id="archive-body">
+        <div style="text-align:center;color:var(--muted);padding:40px;font-size:13px">Još nema arhiviranih kola.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATISTIKA -->
+  <div class="view" id="view-statistika">
+    <div class="lb-card" style="margin-bottom:20px">
+      <div class="lb-card-header"><h2>Statistika</h2><span class="season-badge">· Sezona 2026–2027</span></div>
+      <div id="stats-detail"></div>
+    </div>
+    <div class="lb-card">
+      <div class="lb-card-header"><h2>Head-to-head</h2><span class="season-badge">· Poredi dva igrača</span></div>
+      <div style="padding:16px">
+        <div class="h2h-picker">
+          <select class="matchup-select" id="h2h-a" onchange="renderH2H()"></select>
+          <div class="matchup-vs">VS</div>
+          <select class="matchup-select" id="h2h-b" onchange="renderH2H()"></select>
+        </div>
+        <div id="h2h-result"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALERIJA -->
+  <div class="view" id="view-galerija">
+    <div class="lb-card">
+      <div class="lb-card-header"><h2>Galerija</h2><span class="season-badge">· Pikado Invenda Liga 2026–2027</span></div>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+  </div>
+
+  <!-- STREAM -->
+  <div class="view" id="view-stream">
+    <div class="lb-card">
+      <div class="lb-card-header"><h2 style="color:var(--accent)">🔴 Live Stream</h2><span class="season-badge">· Twitch · Pikado INVENDA Liga</span></div>
+      <div style="padding:20px">
+        <div class="stream-box">
+          <div class="stream-offline-text">
+            <div style="font-size:48px;margin-bottom:12px">📡</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--muted)">STREAM OFFLINE</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:8px">Pratite nas na Twitchu kad igramo sljedeće kolo</div>
+          </div>
+        </div>
+        <div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center">
+          <a href="https://twitch.tv/TR1FA" target="_blank" style="display:inline-flex;align-items:center;gap:8px;background:#9147ff;color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;letter-spacing:1px">📺 Prati na Twitchu</a>
+          <div style="font-size:12px;color:var(--muted)">Pratite kanal da dobijete notifikaciju kad počne stream</div>
+        </div>
+        <div style="margin-top:20px;background:var(--card2);border-radius:8px;padding:16px">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px">Raspored sljedećeg kola</div>
+          <div id="stream-schedule" style="font-size:13px;color:var(--text)">Pogledajte tab Mečevi za raspored.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN -->
+  <div class="view" id="view-admin">
+    <div id="login-area">
+      <div class="login-wrap">
+        <div class="login-card">
+          <div class="login-icon">🎯</div>
+          <h2>Admin Panel</h2>
+          <p>Unesite GitHub token za pristup upravljačkoj ploči</p>
+          <div class="login-info">🔒 Token se čuva samo u memoriji ovog taba dok je otvoren. Ne pamti se trajno — unosite ga svaki put kad se ulogujete.</div>
+          <div class="login-error" id="login-error">Token nije ispravan ili nema pristup repozitorijumu. Pokušajte ponovo.</div>
+          <div class="login-loading" id="login-loading">Provjeravam token...</div>
+          <input type="password" id="pw-input" placeholder="GitHub token (ghp_...)" onkeydown="if(event.key==='Enter')tryLogin()">
+          <button class="btn-login" onclick="tryLogin()">Prijavi se</button>
+          <p class="login-hint">Kontaktirajte administratora za pristup</p>
+        </div>
+      </div>
+    </div>
+    <div class="admin-panel" id="admin-panel">
+      <div class="admin-section">
+        <div class="admin-section-header"><h3>Podešavanja sezone</h3></div>
+        <div style="padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:end">
+          <div><div class="kolo-player-name">Početak sezone</div><input type="date" id="settings-start" class="kolo-input" style="font-size:14px;padding:8px;width:auto"></div>
+          <div><div class="kolo-player-name">Interval (dana)</div><input type="number" id="settings-interval" class="kolo-input" style="font-size:14px;padding:8px;width:80px"></div>
+          <button class="save-kolo-btn" style="width:auto;margin:0;padding:10px 20px" onclick="saveSettings()">✓ Sačuvaj</button>
+        </div>
+        <div class="save-success" id="settings-success">✓ Podešavanja sačuvana!</div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-header"><h3>Mečevi kola</h3><span class="kolo-badge" id="matchup-kolo-badge">KOLO 1</span></div>
+        <div style="padding:16px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Unesite mečeve za sljedeće kolo (po 4 meča)</div>
+          <div id="matchup-inputs"></div>
+          <button class="save-kolo-btn" onclick="saveMatchups()">✓ Sačuvaj mečeve</button>
+          <div class="save-success" id="matchup-success">✓ Mečevi sačuvani!</div>
+        </div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-header"><h3>Rezultati mečeva kola</h3><span class="kolo-badge" id="kolo-badge">KOLO 1</span></div>
+        <div class="legend-row">Unosi se rezultat direktno za svaki par iz "Mečevi kola" &nbsp;·&nbsp; LEG = osvojeni legovi &nbsp;·&nbsp; BOD = bodovi za kolo</div>
+        <div class="edit-grid" id="results-grid"></div>
+        <button class="save-kolo-btn" onclick="saveMatchResults()">✓ Sačuvaj kolo</button>
+        <div class="save-success" id="save-success">✓ Kolo sačuvano!</div>
+      </div>
+      <div class="admin-section">
+        <div class="admin-section-header"><h3>Direktna izmjena — svih 8 igrača</h3><span style="font-size:12px;color:var(--muted)">Bodovi · Leg W · Leg L</span></div>
+        <div class="edit-grid" id="edit-grid"></div>
+        <button class="save-kolo-btn" onclick="saveEdit()">✓ Sačuvaj izmjene</button>
+        <div class="save-success" id="edit-success">✓ Izmjene sačuvane!</div>
+      </div>
+      <button class="logout-btn" onclick="logout()">Odjavi se</button>
+      <button class="logout-btn" onclick="resetData()" style="border-color:rgba(230,57,70,0.3);color:var(--accent)">↺ Reset podataka</button>
+    </div>
+  </div>
+
+</main>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<footer><p>© Peta Pikado INVENDA Liga 2026–2027</p></footer>
+
+<script>
+  // GitHub repo gdje se čuvaju podaci. Token se kuca pri loginu, NIKAD ne ide ovdje u kod.
+  const GH_OWNER = 'tr1fa';
+  const GH_REPO  = '5.Pikado_Invenda_Liga';
+  const GH_PATH  = 'docs/data/liga.json';
+  const GH_BRANCH = 'main';
+  // Javni read URL (bez tokena) - brz prikaz podataka svima
+  const RAW_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_PATH}`;
+  // GitHub API URL (treba token) - koristi se samo za snimanje izmjena
+  const GH_API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
+  const TOTAL_KOLA = 15;
+  const GALLERY_COUNT = 12;
+
+  let isAdmin=false, isSaving=false;
+  let ghToken=null;       // GitHub token - samo u memoriji ove sesije, briše se na logout/zatvaranje taba
+  let currentFileSha=null; // SHA trenutne verzije fajla na GitHub-u, potreban za PUT (update) poziv
+  let koloNum=1, koloMatchups={}, archive=[], matches=[];
+  let playoff={ semis:[], final:null };
+  let seasonStart='2026-09-09', scheduleIntervalDays=7;
+  let players=[];
+
+  const DEFAULT_PLAYERS = [
+    {id:'djordje',  name:'Đorđe Trifunović', pts:0, lw:0, ll:0, bio:'Najvoli da svira TAMBURELO!'},
+    {id:'milos',    name:'Miloš Ivković',    pts:0, lw:0, ll:0, bio:'Ovaj mali je opasan!'},
+    {id:'bojanm',   name:'Bojan Majkić',     pts:0, lw:0, ll:0, bio:'Bato je inače Judo trener!'},
+    {id:'dejan',    name:'Dejan Marković',   pts:0, lw:0, ll:0, bio:'On je sa Oficirca!'},
+    {id:'goran',    name:'Goran Cimeša',     pts:0, lw:0, ll:0, bio:'Veteran, od boćanja su mu muda kao kugle!'},
+    {id:'bojanp',   name:'Bojan Milanović',  pts:0, lw:0, ll:0, bio:'Zna da napravi PROBLEMOVE!'},
+    {id:'leonardo', name:'Leonardo Giric',   pts:0, lw:0, ll:0, bio:'Zašto ga zovu Kenjac?'},
+    {id:'dalibor',  name:'Dalibor Giric',    pts:0, lw:0, ll:0, bio:'Smirena ruka!'},
+  ];
+  const LIGA_TITLES = {
+    'dejan':{title:'Pobjednčik 1. Pikado Invenda Lige'},
+    'djordje':{title:'Pobjedničik 2. Pikado Invenda Lige'},
+    'milos':{title:'Pobjedničik 3. Pikado Invenda Lige'},
+  };
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+  async function loadData(){
+    players = JSON.parse(JSON.stringify(DEFAULT_PLAYERS));
+    koloNum=1; koloMatchups={}; archive=[]; matches=[]; playoff={semis:[],final:null};
+    seasonStart='2026-09-09'; scheduleIntervalDays=7;
+    renderAll();
+    try{
+      const res=await fetch(RAW_URL+'?t='+Date.now());
+      if(res.ok){
+        const d=await res.json();
+        if(d.players&&d.players.length){
+          players=d.players.map(p=>{
+            const def=DEFAULT_PLAYERS.find(x=>x.id===p.id)||{};
+            return { lw:0, ll:0, bio:def.bio||'', ...p };
+          });
+        }
+        if(d.koloNum) koloNum=d.koloNum;
+        if(d.koloMatchups) koloMatchups=d.koloMatchups;
+        if(d.archive) archive=d.archive;
+        if(d.matches) matches=d.matches;
+        if(d.playoff) playoff=d.playoff;
+        if(d.seasonStart) seasonStart=d.seasonStart;
+        if(d.scheduleIntervalDays) scheduleIntervalDays=d.scheduleIntervalDays;
+        renderAll();
+      }
+    }catch(e){ console.warn('Load greška:',e.message); }
+  }
+
+  // Dohvata SHA trenutne verzije fajla preko GitHub API-ja - obavezno za PUT (update),
+  // jer GitHub odbija pisanje bez SHA poslednje poznate verzije (sprečava nesvjesno prepisivanje tuđih izmjena).
+  async function fetchFileSha(){
+    const res=await fetch(GH_API_URL+'?ref='+GH_BRANCH,{headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json'}});
+    if(!res.ok) throw new Error('Ne mogu pročitati fajl sa GitHub-a (HTTP '+res.status+')');
+    const d=await res.json();
+    return d.sha;
+  }
+
+  async function saveData(){
+    if(isSaving) return;
+    if(!ghToken){ alert('Niste ulogovani sa GitHub tokenom.'); return; }
+    isSaving=true;
+    try{
+      // Uvijek prvo povuci najsvježi SHA - ako je neko drugi sačuvao izmjenu u međuvremenu, ovo to hvata
+      currentFileSha=await fetchFileSha();
+      const content=JSON.stringify({players,koloNum,koloMatchups,archive,matches,playoff,seasonStart,scheduleIntervalDays},null,2);
+      const contentB64=btoa(unescape(encodeURIComponent(content)));
+      const res=await fetch(GH_API_URL,{
+        method:'PUT',
+        headers:{'Authorization':'Bearer '+ghToken,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+        body:JSON.stringify({
+          message:'Ažuriranje podataka - Kolo '+koloNum+' ('+new Date().toLocaleString('sr-RS')+')',
+          content:contentB64,
+          sha:currentFileSha,
+          branch:GH_BRANCH
+        })
+      });
+      if(!res.ok){
+        const errBody=await res.json().catch(()=>({}));
+        throw new Error('HTTP '+res.status+(errBody.message?' - '+errBody.message:''));
+      }
+      const result=await res.json();
+      currentFileSha=result.content.sha;
+    }catch(e){ alert('Greška pri čuvanju: '+e.message); }
+    isSaving=false;
+  }
+
+  function initials(n){ return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(); }
+  function sorted(){ return [...players].sort((a,b)=> b.pts!==a.pts ? b.pts-a.pts : ((b.lw||0)-(b.ll||0))-((a.lw||0)-(a.ll||0))); }
+  function rankClass(r){ return r===1?'r1':r===2?'r2':r===3?'r3':''; }
+  function avClass(r){ return r===1?'av-gold':r===2?'av-silver':r===3?'av-bronze':'av-default'; }
+  function starsHtml(id){ return LIGA_TITLES[id] ? `<span class="star-wrap"><span class="star-icon">★</span><span class="star-tooltip">${esc(LIGA_TITLES[id].title)}</span></span>`:''; }
+  function showFlash(id){ const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
+
+  function renderAll(){
+    renderHero(); renderStats(); renderLeaderboard(); renderPlayers(); renderMecevi();
+    renderCalendar(); renderArchive(); renderStatsDetail(); renderH2HSelectors();
+    renderGallery(); renderPlejof();
+    if(isAdmin){ renderResultsGrid(); renderEditGrid(); renderMatchupInputs(); renderSettingsInputs(); }
+  }
+
+  function renderHero(){
+    const odigrana=Math.max(0,koloNum-1);
+    const pct=Math.min(100,Math.round(odigrana/TOTAL_KOLA*100));
+    const label=document.getElementById('hero-kolo-label');
+    if(label) label.textContent = odigrana>=TOTAL_KOLA ? 'Regularni deo završen' : `Kolo ${koloNum} / ${TOTAL_KOLA}`;
+    const fill=document.getElementById('hero-progress');
+    if(fill) fill.style.width=pct+'%';
+  }
+
+  function renderStats(){
+    const s=sorted(); const odigrana=koloNum-1; const preostala=Math.max(0,TOTAL_KOLA-odigrana);
+    document.getElementById('stats-grid').innerHTML=`
+      <div class="stat-card"><div class="stat-label">Lider</div><div class="stat-val" style="font-size:20px;font-family:'Barlow Condensed';font-weight:800">${esc(s[0].name.split(' ')[0])}</div><div class="stat-sub">${s[0].pts} bodova</div></div>
+      <div class="stat-card"><div class="stat-label">Igrača</div><div class="stat-val">${players.length}</div><div class="stat-sub">u ligi</div></div>
+      <div class="stat-card"><div class="stat-label">Odigranih kola</div><div class="stat-val">${odigrana}</div><div class="stat-sub">od ${TOTAL_KOLA} ukupno</div></div>
+      <div class="stat-card"><div class="stat-label">Preostalo kola</div><div class="stat-val" style="color:var(--accent)">${preostala}</div><div class="stat-sub">do kraja sezone</div></div>`;
+  }
+
+  function renderLeaderboard(){
+    const s=sorted(); const preostala=Math.max(0,TOTAL_KOLA-(koloNum-1));
+    const prevRanks=archive.length?archive[archive.length-1].ranks:null;
+    document.getElementById('lb-body').innerHTML=s.map((p,i)=>{
+      const rank=i+1, isPlayoff=rank<=4, isBarraz=rank===5||rank===6;
+      const rowClass=isPlayoff?' playoff':isBarraz?' barraz':'';
+      const ptsColor=p.pts>=20?'var(--gold)':p.pts>=14?'var(--silver)':p.pts>=10?'var(--bronze)':'var(--text)';
+      const diff=(p.lw||0)-(p.ll||0);
+      const diffStr=diff>0?`<span style="color:var(--green);font-weight:700">+${diff}</span>`:diff<0?`<span style="color:var(--accent);font-weight:700">${diff}</span>`:`<span style="color:var(--muted)">0</span>`;
+      let trend='';
+      if(prevRanks&&prevRanks[p.id]){ const d=prevRanks[p.id]-rank; if(d>0) trend=`<span class="trend up">▲${d}</span>`; else if(d<0) trend=`<span class="trend down">▼${-d}</span>`; }
+      const status=isPlayoff?'<span class="playoff-pill">Playoff</span>':isBarraz?'<span class="barraz-pill">Baraž</span>':'<span style="color:var(--muted)">—</span>';
+      return `<div class="lb-row${rowClass}">
+        <div class="lb-rank ${rankClass(rank)}">${rank}</div>
+        <div class="lb-name">${rank===1?'👑 ':''}${esc(p.name)}${starsHtml(p.id)}${trend}</div>
+        <div class="lb-pts" style="color:${ptsColor}">${p.pts}</div>
+        <div class="col-center" style="color:var(--green)">${p.lw||0}</div>
+        <div class="col-center" style="color:var(--accent)">${p.ll||0}</div>
+        <div class="col-center">${diffStr}</div>
+        <div class="col-center" style="color:var(--muted);font-size:14px">${preostala}</div>
+        <div class="col-status">${status}</div></div>`;
+    }).join('');
+  }
+
+  function renderPlayers(){
+    const s=sorted();
+    document.getElementById('players-grid').innerHTML=s.map((p,i)=>{
+      const rank=i+1;
+      const avatar=`<div class="player-avatar ${avClass(rank)}"><img src="images/${esc(p.id)}.jpg" alt="${esc(p.name)}" onerror="this.onerror=null;this.style.display='none';this.parentElement.textContent='${initials(p.name)}';"></div>`;
+      return `<div class="player-card">${rank===1?'<div class="crown-badge">👑</div>':''}${avatar}
+        <div class="player-name">${esc(p.name)}${starsHtml(p.id)}</div>
+        <div class="player-pts">${p.pts}</div><div class="player-pts-label">bodova</div>
+        <div class="player-mini-stats"><span style="color:var(--green)">LW ${p.lw||0}</span><span style="color:var(--accent)">LL ${p.ll||0}</span></div>
+        <div class="player-bio">${esc(p.bio||'')}</div></div>`;
+    }).join('');
+  }
+
+  function renderMecevi(){
+    const m=koloMatchups[koloNum]||[];
+    document.getElementById('mecevi-kolo-label').textContent=`· Kolo ${koloNum}`;
+    const mb=document.getElementById('matchup-kolo-badge'); if(mb) mb.textContent=`KOLO ${koloNum}`;
+    const kb=document.getElementById('kolo-badge'); if(kb) kb.textContent=`KOLO ${koloNum}`;
+    const grid=document.getElementById('mecevi-grid');
+    if(!m.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px">Mečevi još nisu objavljeni.</div>'; document.getElementById('stream-schedule').textContent='Pogledajte tab Mečevi za raspored.'; return; }
+    grid.innerHTML=m.map(x=>`<div class="matchup-card"><span style="flex:1">${esc(x[0])}</span><span class="vs-badge">VS</span><span style="flex:1;text-align:right">${esc(x[1])}</span></div>`).join('');
+    document.getElementById('stream-schedule').innerHTML=m.map(x=>`<div style="margin-bottom:4px">🎯 ${esc(x[0])} vs ${esc(x[1])}</div>`).join('');
+  }
+
+  function koloDate(n){
+    const start=new Date(seasonStart+'T12:00:00');
+    return new Date(start.getTime()+(n-1)*scheduleIntervalDays*86400000);
+  }
+  function fmtDate(d){
+    return d.toLocaleDateString('sr-RS',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});
+  }
+
+  function renderCalendar(){
+    const c=document.getElementById('calendar-body');
+    if(!c) return;
+    let html='';
+    for(let n=1;n<=TOTAL_KOLA;n++){
+      const d=fmtDate(koloDate(n));
+      const isPast=n<koloNum, isNow=n===koloNum;
+      const statusPill=isPast?'<span class="playoff-pill">Odigrano</span>':isNow?'<span class="barraz-pill">Trenutno</span>':'<span class="blue-pill">Predstoji</span>';
+      const m=koloMatchups[n];
+      const matchesHtml=(m&&m.length)?m.map(x=>`<div style="margin-bottom:4px">🎯 ${esc(x[0])} vs ${esc(x[1])}</div>`).join(''):'<div style="color:var(--muted)">Raspored mečeva još nije unet.</div>';
+      html+=`<div class="archive-round">
+        <div class="archive-head" onclick="toggleCal(${n})"><h4>Kolo ${n} <span style="color:var(--muted);font-weight:400;font-size:12px">· ${d}</span></h4>${statusPill}</div>
+        <div class="archive-body" id="cal-${n}">${matchesHtml}</div>
+      </div>`;
+    }
+    c.innerHTML=html;
+  }
+  function toggleCal(n){ const el=document.getElementById('cal-'+n); if(el) el.classList.toggle('open'); }
+
+  function renderArchive(){
+    const c=document.getElementById('archive-body');
+    if(!archive.length){ c.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:13px">Još nema arhiviranih kola.</div>'; return; }
+    c.innerHTML=[...archive].reverse().map((snap,idx)=>{
+      const realIdx=archive.length-1-idx;
+      const rows=snap.table.map((p,i)=>`<tr><td style="color:var(--muted)">${i+1}.</td><td>${esc(p.name)}</td><td style="color:var(--gold);font-weight:700">${p.pts}</td><td style="color:var(--green)">${p.lw}</td><td style="color:var(--accent)">${p.ll}</td></tr>`).join('');
+      const roundMatches=matches.filter(m=>m.kolo===snap.kolo);
+      const matchesHtml=roundMatches.length?`<div class="archive-matches">${roundMatches.map(m=>`<div>🎯 ${esc(m.a)} <b>${m.legsA}</b> : <b>${m.legsB}</b> ${esc(m.b)}</div>`).join('')}</div>`:'';
+      return `<div class="archive-round">
+        <div class="archive-head" onclick="toggleArchive(${realIdx})"><h4>Kolo ${snap.kolo} <span style="color:var(--muted);font-weight:400;font-size:12px">· stanje poslije kola</span></h4><span style="color:var(--gold)">▾</span></div>
+        <div class="archive-body" id="arch-${realIdx}">
+          <table class="archive-table"><thead><tr><th>#</th><th>Igrač</th><th>Bod</th><th>LW</th><th>LL</th></tr></thead><tbody>${rows}</tbody></table>
+          ${matchesHtml}
+        </div></div>`;
+    }).join('');
+  }
+  function toggleArchive(i){ const el=document.getElementById('arch-'+i); if(el) el.classList.toggle('open'); }
+
+  function renderStatsDetail(){
+    const s=sorted();
+    const maxPts=Math.max(...s.map(p=>p.pts),1);
+    const maxLw=Math.max(...s.map(p=>p.lw||0),1);
+    const bestDiff=[...s].sort((a,b)=>((b.lw||0)-(b.ll||0))-((a.lw||0)-(a.ll||0)));
+    const totLegs=s.reduce((a,p)=>a+(p.lw||0)+(p.ll||0),0);
+    const bar=(name,val,max,color)=>`<div class="stat-bar-row"><div>${esc(name)}</div><div class="stat-bar-track"><div class="stat-bar-fill" style="width:${Math.round(val/max*100)}%;background:${color}"></div></div><div style="text-align:right;font-weight:700">${val}</div></div>`;
+    document.getElementById('stats-detail').innerHTML=`
+      <div class="stat-block"><h4>Bodovi po igraču</h4>${s.map(p=>bar(p.name,p.pts,maxPts,'var(--gold)')).join('')}</div>
+      <div class="stat-block"><h4>Osvojeni legovi (LW)</h4>${s.map(p=>bar(p.name,p.lw||0,maxLw,'var(--green)')).join('')}</div>
+      <div class="stat-block"><h4>Najbolja leg razlika (+/−)</h4>${bestDiff.map(p=>{const d=(p.lw||0)-(p.ll||0);return `<div class="stat-bar-row"><div>${esc(p.name)}</div><div style="color:var(--muted);font-size:12px">${p.lw||0} : ${p.ll||0}</div><div style="text-align:right;font-weight:700;color:${d>=0?'var(--green)':'var(--accent)'}">${d>=0?'+':''}${d}</div></div>`;}).join('')}</div>
+      <div class="stat-block"><h4>Ukupno</h4><div style="display:flex;gap:24px;flex-wrap:wrap;font-size:14px"><div><span style="color:var(--muted)">Odigrano legova:</span> <b>${totLegs}</b></div><div><span style="color:var(--muted)">Odigrano kola:</span> <b>${koloNum-1}</b></div><div><span style="color:var(--muted)">Prosjek bodova:</span> <b>${(s.reduce((a,p)=>a+p.pts,0)/s.length).toFixed(1)}</b></div></div></div>`;
+  }
+
+  function renderH2HSelectors(){
+    const a=document.getElementById('h2h-a'), b=document.getElementById('h2h-b');
+    if(!a||!b) return;
+    const opts=players.map(p=>`<option value="${esc(p.name)}">${esc(p.name)}</option>`).join('');
+    const prevA=a.value, prevB=b.value;
+    a.innerHTML=opts; b.innerHTML=opts;
+    a.value = players.find(p=>p.name===prevA) ? prevA : (players[0]?.name||'');
+    b.value = players.find(p=>p.name===prevB) ? prevB : (players[1]?.name||'');
+    renderH2H();
+  }
+  function renderH2H(){
+    const a=document.getElementById('h2h-a')?.value, b=document.getElementById('h2h-b')?.value;
+    const out=document.getElementById('h2h-result');
+    if(!out) return;
+    if(!a||!b||a===b){ out.innerHTML='<div style="padding:16px;color:var(--muted);font-size:13px">Izaberite dva različita igrača.</div>'; return; }
+    const ms=matches.filter(m=>(m.a===a&&m.b===b)||(m.a===b&&m.b===a));
+    if(!ms.length){ out.innerHTML='<div style="padding:16px;color:var(--muted);font-size:13px">Još nema odigranih mečeva između ova dva igrača.</div>'; return; }
+    let winsA=0, winsB=0, legsA=0, legsB=0;
+    const rows=ms.map(m=>{
+      const aIsA=m.a===a;
+      const la=aIsA?m.legsA:m.legsB, lb=aIsA?m.legsB:m.legsA;
+      legsA+=la; legsB+=lb;
+      if(la>lb) winsA++; else if(lb>la) winsB++;
+      return `<div class="stat-bar-row" style="grid-template-columns:60px 1fr 60px"><div style="color:var(--muted)">Kolo ${m.kolo}</div><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px">${la} : ${lb}</div><div></div></div>`;
+    }).join('');
+    out.innerHTML=`<div style="display:flex;justify-content:center;align-items:center;gap:16px;padding:12px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:28px">
+        <span style="color:var(--gold)">${winsA}</span><span style="color:var(--muted);font-size:13px;font-family:'Barlow',sans-serif">pobeda</span><span style="color:var(--gold)">${winsB}</span>
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:12px;margin-bottom:16px">Ukupno legova: ${legsA} : ${legsB}</div>
+      ${rows}`;
+  }
+
+  function renderGallery(){
+    const grid=document.getElementById('gallery-grid');
+    let html='';
+    for(let i=1;i<=GALLERY_COUNT;i++){
+      html+=`<img class="gallery-img" src="images/galerija${i}.jpg" alt="Galerija ${i}" onclick="openLightbox(this.src)" onerror="this.remove()">`;
+    }
+    grid.innerHTML=html+`<div id="gallery-empty" style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px;font-size:13px;display:none">Galerija će biti uskoro dostupna.</div>`;
+    setTimeout(()=>{ if(!grid.querySelectorAll('.gallery-img').length){ const e=document.getElementById('gallery-empty'); if(e) e.style.display='block'; } },800);
+  }
+  function openLightbox(src){ document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('open'); }
+  function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
+
+  function renderResultsGrid(){
+    const grid=document.getElementById('results-grid');
+    if(!grid) return;
+    const pairs=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]);
+    if(!pairs.length){
+      grid.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--muted);font-size:13px;background:var(--card)">Prvo unesite mečeve za ovo kolo u sekciji "Mečevi kola" iznad.</div>';
+      return;
+    }
+    grid.innerHTML=pairs.map((p,i)=>`
+      <div class="edit-cell" style="grid-column:1/-1">
+        <div class="edit-player-name">${esc(p[0])} <span style="color:var(--accent)">vs</span> ${esc(p[1])}</div>
+        <div class="edit-inputs">
+          <div style="flex:1"><input class="edit-input lw-inp" id="res-legsA-${i}" type="number" min="0" value="0"><div class="edit-lbl">LEG ${esc(p[0].split(' ')[0])}</div></div>
+          <div style="flex:1"><input class="edit-input lw-inp" id="res-legsB-${i}" type="number" min="0" value="0"><div class="edit-lbl">LEG ${esc(p[1].split(' ')[0])}</div></div>
+          <div style="flex:1"><input class="edit-input" id="res-ptsA-${i}" type="number" min="0" value="0"><div class="edit-lbl">BOD ${esc(p[0].split(' ')[0])}</div></div>
+          <div style="flex:1"><input class="edit-input" id="res-ptsB-${i}" type="number" min="0" value="0"><div class="edit-lbl">BOD ${esc(p[1].split(' ')[0])}</div></div>
+        </div>
+      </div>`).join('');
+  }
+
+  function saveMatchResults(){
+    const pairs=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]);
+    if(!pairs.length){ alert('Nema unetih mečeva za ovo kolo.'); return; }
+    pairs.forEach((p,i)=>{
+      const legsA=parseInt(document.getElementById('res-legsA-'+i)?.value)||0;
+      const legsB=parseInt(document.getElementById('res-legsB-'+i)?.value)||0;
+      const ptsA=parseInt(document.getElementById('res-ptsA-'+i)?.value)||0;
+      const ptsB=parseInt(document.getElementById('res-ptsB-'+i)?.value)||0;
+      const pa=players.find(pl=>pl.name===p[0]);
+      const pb=players.find(pl=>pl.name===p[1]);
+      if(pa){ pa.pts+=ptsA; pa.lw=(pa.lw||0)+legsA; pa.ll=(pa.ll||0)+legsB; }
+      if(pb){ pb.pts+=ptsB; pb.lw=(pb.lw||0)+legsB; pb.ll=(pb.ll||0)+legsA; }
+      matches.push({kolo:koloNum, a:p[0], b:p[1], legsA, legsB, ptsA, ptsB});
+    });
+    const s=sorted();
+    const ranks={}; s.forEach((p,i)=>ranks[p.id]=i+1);
+    archive.push({ kolo:koloNum, table:s.map(p=>({name:p.name,pts:p.pts,lw:p.lw||0,ll:p.ll||0})), ranks });
+    koloNum++;
+    renderAll(); saveData(); showFlash('save-success');
+  }
+
+  function renderEditGrid(){
+    document.getElementById('edit-grid').innerHTML=players.map(p=>`
+      <div class="edit-cell"><div class="edit-player-name">${esc(p.name)}</div>
+      <div class="edit-inputs">
+        <div style="flex:1"><input class="edit-input" id="edit-pts-${p.id}" type="number" value="${p.pts}"><div class="edit-lbl">PTS</div></div>
+        <div style="flex:1"><input class="edit-input lw-inp" id="edit-lw-${p.id}" type="number" value="${p.lw||0}"><div class="edit-lbl" style="color:var(--green)">LW</div></div>
+        <div style="flex:1"><input class="edit-input ll-inp" id="edit-ll-${p.id}" type="number" value="${p.ll||0}"><div class="edit-lbl" style="color:var(--accent)">LL</div></div>
+      </div></div>`).join('');
+  }
+
+  function saveEdit(){
+    players.forEach(p=>{
+      p.pts=parseInt(document.getElementById('edit-pts-'+p.id)?.value)||0;
+      p.lw=parseInt(document.getElementById('edit-lw-'+p.id)?.value)||0;
+      p.ll=parseInt(document.getElementById('edit-ll-'+p.id)?.value)||0;
+    });
+    renderAll(); renderEditGrid(); saveData(); showFlash('edit-success');
+  }
+
+  function renderMatchupInputs(){
+    const names=players.map(p=>p.name);
+    const cur=koloMatchups[koloNum]||[['',''],['',''],['',''],['','']];
+    const opts=sel=>names.map(n=>`<option value="${esc(n)}" ${n===sel?'selected':''}>${esc(n)}</option>`).join('');
+    document.getElementById('matchup-inputs').innerHTML=[0,1,2,3].map(i=>`
+      <div class="matchup-input-row">
+        <select class="matchup-select" id="mu-a-${i}"><option value="">— Igrač A —</option>${opts(cur[i]?.[0]||'')}</select>
+        <div class="matchup-vs">VS</div>
+        <select class="matchup-select" id="mu-b-${i}"><option value="">— Igrač B —</option>${opts(cur[i]?.[1]||'')}</select>
+      </div>`).join('');
+  }
+
+  function saveMatchups(){
+    const pairs=[0,1,2,3].map(i=>[document.getElementById('mu-a-'+i)?.value||'',document.getElementById('mu-b-'+i)?.value||'']).filter(p=>p[0]&&p[1]);
+    koloMatchups[koloNum]=pairs; renderMecevi(); renderCalendar(); renderResultsGrid(); saveData(); showFlash('matchup-success');
+  }
+
+  function renderSettingsInputs(){
+    const s=document.getElementById('settings-start'); if(s) s.value=seasonStart;
+    const iv=document.getElementById('settings-interval'); if(iv) iv.value=scheduleIntervalDays;
+  }
+  function saveSettings(){
+    const s=document.getElementById('settings-start')?.value;
+    const iv=parseInt(document.getElementById('settings-interval')?.value);
+    if(s) seasonStart=s;
+    if(iv) scheduleIntervalDays=iv;
+    renderAll(); saveData(); showFlash('settings-success');
+  }
+
+  function semiWinner(m){ return m.legsA===m.legsB ? null : (m.legsA>m.legsB?m.a:m.b); }
+
+  function renderPlejof(){
+    const body=document.getElementById('plejof-body');
+    if(!body) return;
+    const odigrana=koloNum-1;
+    if(odigrana<TOTAL_KOLA){
+      body.innerHTML=`<div style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Plej-of počinje po završetku regularnog dela · još ${TOTAL_KOLA-odigrana} kolo(a).</div>`;
+      return;
+    }
+    const top4=sorted().slice(0,4);
+    if(top4.length<4){ body.innerHTML='<div style="text-align:center;color:var(--muted);padding:30px">Nedovoljno igrača.</div>'; return; }
+    if(!playoff.semis||playoff.semis.length!==2){
+      playoff.semis=[
+        {a:top4[0].name,b:top4[3].name,legsA:0,legsB:0},
+        {a:top4[1].name,b:top4[2].name,legsA:0,legsB:0}
+      ];
+    }
+    const w1=semiWinner(playoff.semis[0]), w2=semiWinner(playoff.semis[1]);
+    if(w1&&w2){
+      if(!playoff.final||playoff.final.a!==w1||playoff.final.b!==w2){
+        playoff.final={a:w1,b:w2,legsA:0,legsB:0};
+      }
+    } else {
+      playoff.final=null;
+    }
+    const matchCard=(label,m,idx,isFinal)=>{
+      const winner=semiWinner(m);
+      const inputs=isAdmin?`<div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+          <input type="number" min="0" class="edit-input" style="width:50px;flex:none" id="${isFinal?'pf-final-a':'pf-semi-'+idx+'-a'}" value="${m.legsA}">
+          <span style="color:var(--muted)">:</span>
+          <input type="number" min="0" class="edit-input" style="width:50px;flex:none" id="${isFinal?'pf-final-b':'pf-semi-'+idx+'-b'}" value="${m.legsB}">
+          <button class="save-kolo-btn" style="width:auto;margin:0;padding:8px 14px;font-size:12px" onclick="${isFinal?'savePlayoffFinal()':'savePlayoffSemi('+idx+')'}">✓</button>
+        </div>`:'';
+      return `<div class="bracket-match">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">${label}</div>
+        <div class="bm-row${winner===m.a?' winner':''}"><span>${esc(m.a)}</span><span>${m.legsA}</span></div>
+        <div class="bm-row${winner===m.b?' winner':''}"><span>${esc(m.b)}</span><span>${m.legsB}</span></div>
+        ${inputs}
+      </div>`;
+    };
+    let html=`<div class="bracket-semis">
+        ${matchCard('Polufinale 1 · 1. vs 4.',playoff.semis[0],0,false)}
+        ${matchCard('Polufinale 2 · 2. vs 3.',playoff.semis[1],1,false)}
+      </div>
+      <div style="text-align:center;color:var(--muted);font-size:22px;margin:16px 0">↓</div>`;
+    if(playoff.final){
+      html+=`<div style="max-width:280px;margin:0 auto">${matchCard('Finale',playoff.final,null,true)}</div>`;
+      const champ=semiWinner(playoff.final);
+      if(champ) html+=`<div style="text-align:center;margin-top:24px;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold)">🏆 ${esc(champ)}</div>`;
+    } else {
+      html+=`<div style="text-align:center;color:var(--muted);font-size:13px">Čeka se ishod polufinala.</div>`;
+    }
+    body.innerHTML=html;
+  }
+  function savePlayoffSemi(idx){
+    playoff.semis[idx].legsA=parseInt(document.getElementById('pf-semi-'+idx+'-a')?.value)||0;
+    playoff.semis[idx].legsB=parseInt(document.getElementById('pf-semi-'+idx+'-b')?.value)||0;
+    renderPlejof(); saveData();
+  }
+  function savePlayoffFinal(){
+    if(!playoff.final) return;
+    playoff.final.legsA=parseInt(document.getElementById('pf-final-a')?.value)||0;
+    playoff.final.legsB=parseInt(document.getElementById('pf-final-b')?.value)||0;
+    renderPlejof(); saveData();
+  }
+
+  function showTab(name){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+    document.getElementById('tab-'+name).classList.add('active');
+  }
+
+  async function tryLogin(){
+    const tokenInput=document.getElementById('pw-input').value.trim();
+    const err=document.getElementById('login-error');
+    const loading=document.getElementById('login-loading');
+    err.style.display='none';
+    if(!tokenInput){ err.textContent='Unesite token.'; err.style.display='block'; return; }
+    loading.style.display='block';
+    try{
+      // Validacija: probaj da pročitaš info o fajlu sa tim tokenom. Ako uspije, token ima pristup repo-u.
+      const res=await fetch(GH_API_URL+'?ref='+GH_BRANCH,{headers:{'Authorization':'Bearer '+tokenInput,'Accept':'application/vnd.github+json'}});
+      loading.style.display='none';
+      if(res.ok){
+        const d=await res.json();
+        currentFileSha=d.sha;
+        ghToken=tokenInput;
+        isAdmin=true;
+        document.getElementById('login-area').style.display='none';
+        document.getElementById('admin-panel').style.display='block';
+        document.getElementById('admin-badge').style.display='block';
+        document.getElementById('pw-input').value='';
+        renderResultsGrid(); renderEditGrid(); renderMatchupInputs(); renderSettingsInputs(); renderPlejof(); err.style.display='none';
+      } else {
+        err.textContent = res.status===401||res.status===403
+          ? 'Token nije ispravan ili je istekao.'
+          : 'Token nema pristup ovom repozitorijumu (HTTP '+res.status+').';
+        err.style.display='block';
+        document.getElementById('pw-input').value='';
+      }
+    }catch(e){
+      loading.style.display='none';
+      err.textContent='Greška pri provjeri tokena: '+e.message;
+      err.style.display='block';
+    }
+  }
+  function logout(){
+    isAdmin=false; ghToken=null; currentFileSha=null;
+    document.getElementById('login-area').style.display='block';
+    document.getElementById('admin-panel').style.display='none';
+    document.getElementById('admin-badge').style.display='none';
+    document.getElementById('pw-input').value=''; showTab('tabela'); renderPlejof();
+  }
+  function resetData(){
+    const potvrda=prompt('OVO BRIŠE SVE BODOVE I CIJELU ARHIVU SEZONE, nepovratno.\nUkucajte RESET (velikim slovima) da potvrdite:');
+    if(potvrda!=='RESET') return;
+    players=JSON.parse(JSON.stringify(DEFAULT_PLAYERS)); koloNum=1; koloMatchups={}; archive=[]; matches=[];
+    playoff={semis:[],final:null}; seasonStart='2026-09-09'; scheduleIntervalDays=7;
+    renderAll(); renderEditGrid(); saveData();
+  }
+
+  loadData();
+</script>
+</body>
+</html>
