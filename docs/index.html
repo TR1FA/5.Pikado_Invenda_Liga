@@ -438,10 +438,11 @@
     {id:'dalibor',  name:'Dalibor Giric',    pts:0, lw:0, ll:0, bio:'Smirena ruka!'},
   ];
   const LIGA_TITLES = {
-    'dejan':{title:'Pobjednčik 1. Pikado Invenda Lige'},
-    'djordje':{title:'Pobjedničik 2. Pikado Invenda Lige'},
-    'milos':{title:'Pobjedničik 3. Pikado Invenda Lige'},
+    'dejan':['Pobjednik 1. Pikado Invenda Lige'],
+    'djordje':['Pobjednik 2. Pikado Invenda Lige'],
+    'milos':['Pobjednik 3. Pikado Invenda Lige','Pobjednik 4. Pikado Invenda Lige'],
   };
+  const REIGNING_CHAMPION_ID = 'milos'; // pobjednik poslednje odigrane lige (4.) - nosi krunu, nezavisno od trenutne tabele
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
@@ -514,7 +515,11 @@
   function sorted(){ return [...players].sort((a,b)=> b.pts!==a.pts ? b.pts-a.pts : ((b.lw||0)-(b.ll||0))-((a.lw||0)-(a.ll||0))); }
   function rankClass(r){ return r===1?'r1':r===2?'r2':r===3?'r3':''; }
   function avClass(r){ return r===1?'av-gold':r===2?'av-silver':r===3?'av-bronze':'av-default'; }
-  function starsHtml(id){ return LIGA_TITLES[id] ? `<span class="star-wrap"><span class="star-icon">★</span><span class="star-tooltip">${esc(LIGA_TITLES[id].title)}</span></span>`:''; }
+  function starsHtml(id){
+    const titles=LIGA_TITLES[id];
+    if(!titles) return '';
+    return titles.map(t=>`<span class="star-wrap"><span class="star-icon">★</span><span class="star-tooltip">${esc(t)}</span></span>`).join('');
+  }
   function showFlash(id){ const el=document.getElementById(id); el.style.display='block'; setTimeout(()=>el.style.display='none',2500); }
 
   function renderAll(){
@@ -556,7 +561,7 @@
       const status=isPlayoff?'<span class="playoff-pill">Playoff</span>':isBarraz?'<span class="barraz-pill">Baraž</span>':'<span style="color:var(--muted)">—</span>';
       return `<div class="lb-row${rowClass}">
         <div class="lb-rank ${rankClass(rank)}">${rank}</div>
-        <div class="lb-name">${rank===1?'👑 ':''}${esc(p.name)}${starsHtml(p.id)}${trend}</div>
+        <div class="lb-name">${p.id===REIGNING_CHAMPION_ID?'👑 ':''}${esc(p.name)}${starsHtml(p.id)}${trend}</div>
         <div class="lb-pts" style="color:${ptsColor}">${p.pts}</div>
         <div class="col-center" style="color:var(--green)">${p.lw||0}</div>
         <div class="col-center" style="color:var(--accent)">${p.ll||0}</div>
@@ -571,7 +576,7 @@
     document.getElementById('players-grid').innerHTML=s.map((p,i)=>{
       const rank=i+1;
       const avatar=`<div class="player-avatar ${avClass(rank)}"><img src="images/${esc(p.id)}.jpg" alt="${esc(p.name)}" onerror="this.onerror=null;this.style.display='none';this.parentElement.textContent='${initials(p.name)}';"></div>`;
-      return `<div class="player-card">${rank===1?'<div class="crown-badge">👑</div>':''}${avatar}
+      return `<div class="player-card">${p.id===REIGNING_CHAMPION_ID?'<div class="crown-badge">👑</div>':''}${avatar}
         <div class="player-name">${esc(p.name)}${starsHtml(p.id)}</div>
         <div class="player-pts">${p.pts}</div><div class="player-pts-label">bodova</div>
         <div class="player-mini-stats"><span style="color:var(--green)">LW ${p.lw||0}</span><span style="color:var(--accent)">LL ${p.ll||0}</span></div>
