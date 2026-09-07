@@ -381,9 +381,18 @@
       </div>
       <div class="admin-section">
         <div class="admin-section-header"><h3>Rezultati mečeva kola</h3><span class="kolo-badge" id="kolo-badge">KOLO 1</span></div>
-        <div class="legend-row">Unosi se rezultat direktno za svaki par iz "Mečevi kola" &nbsp;·&nbsp; LEG = osvojeni legovi &nbsp;·&nbsp; BOD = bodovi za kolo</div>
+        <div class="legend-row">Pobeda = 3 boda &nbsp;·&nbsp; Poraz (odigrano) = 1 bod &nbsp;·&nbsp; Ne pojavi se / preda = 0 bodova &nbsp;·&nbsp; Pobeda preko protivnika koji se ne pojavi/preda = 2 boda (volšet)</div>
         <div class="edit-grid" id="results-grid"></div>
-        <button class="save-kolo-btn" onclick="saveMatchResults()">✓ Sačuvaj kolo</button>
+        <div style="padding:14px 16px;border-top:1px dashed var(--border)">
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Dodaj meč (ne mora biti iz rasporeda)</div>
+          <div class="matchup-input-row" style="margin-bottom:0">
+            <select class="matchup-select" id="add-match-a"></select>
+            <div class="matchup-vs">VS</div>
+            <select class="matchup-select" id="add-match-b"></select>
+          </div>
+          <button class="save-kolo-btn" style="width:auto;margin:10px 0 0;padding:9px 18px" onclick="addPendingMatch()">+ Dodaj meč</button>
+        </div>
+        <button class="save-kolo-btn" id="save-results-btn" onclick="saveMatchResults()">✓ Sačuvaj kolo</button>
         <div class="save-success" id="save-success">✓ Kolo sačuvano!</div>
       </div>
       <div class="admin-section">
@@ -416,7 +425,7 @@
   const RAW_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_PATH}`;
   // GitHub API URL (treba token) - koristi se samo za snimanje izmjena
   const GH_API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_PATH}`;
-  const TOTAL_KOLA = 15;
+  const TOTAL_KOLA = 16;
   const GALLERY_COUNT = 12;
 
   let isAdmin=false, isSaving=false;
@@ -424,7 +433,7 @@
   let currentFileSha=null; // SHA trenutne verzije fajla na GitHub-u, potreban za PUT (update) poziv
   let koloNum=1, koloMatchups={}, archive=[], matches=[];
   let playoff={ semis:[], final:null };
-  let seasonStart='2026-09-09', scheduleIntervalDays=7;
+  let seasonStart='2026-09-04', scheduleIntervalDays=7;
   let players=[];
 
   const DEFAULT_PLAYERS = [
@@ -449,7 +458,7 @@
   async function loadData(){
     players = JSON.parse(JSON.stringify(DEFAULT_PLAYERS));
     koloNum=1; koloMatchups={}; archive=[]; matches=[]; playoff={semis:[],final:null};
-    seasonStart='2026-09-09'; scheduleIntervalDays=7;
+    seasonStart='2026-09-04'; scheduleIntervalDays=7;
     renderAll();
     try{
       const res=await fetch(RAW_URL+'?t='+Date.now());
@@ -629,7 +638,12 @@
       const realIdx=archive.length-1-idx;
       const rows=snap.table.map((p,i)=>`<tr><td style="color:var(--muted)">${i+1}.</td><td>${esc(p.name)}</td><td style="color:var(--gold);font-weight:700">${p.pts}</td><td style="color:var(--green)">${p.lw}</td><td style="color:var(--accent)">${p.ll}</td></tr>`).join('');
       const roundMatches=matches.filter(m=>m.kolo===snap.kolo);
-      const matchesHtml=roundMatches.length?`<div class="archive-matches">${roundMatches.map(m=>`<div>🎯 ${esc(m.a)} <b>${m.legsA}</b> : <b>${m.legsB}</b> ${esc(m.b)}</div>`).join('')}</div>`:'';
+      const matchLine=m=>{
+        if(m.noShowA) return `🎯 ${esc(m.a)} <span style="color:var(--muted)">(NP/predao)</span> — ${esc(m.b)} pobeda (volšet)`;
+        if(m.noShowB) return `🎯 ${esc(m.a)} pobeda (volšet) — ${esc(m.b)} <span style="color:var(--muted)">(NP/predao)</span>`;
+        return `🎯 ${esc(m.a)} <b>${m.legsA}</b> : <b>${m.legsB}</b> ${esc(m.b)}`;
+      };
+      const matchesHtml=roundMatches.length?`<div class="archive-matches">${roundMatches.map(m=>`<div>${matchLine(m)}</div>`).join('')}</div>`:'';
       return `<div class="archive-round">
         <div class="archive-head" onclick="toggleArchive(${realIdx})"><h4>Kolo ${snap.kolo} <span style="color:var(--muted);font-weight:400;font-size:12px">· stanje poslije kola</span></h4><span style="color:var(--gold)">▾</span></div>
         <div class="archive-body" id="arch-${realIdx}">
@@ -674,10 +688,19 @@
     let winsA=0, winsB=0, legsA=0, legsB=0;
     const rows=ms.map(m=>{
       const aIsA=m.a===a;
-      const la=aIsA?m.legsA:m.legsB, lb=aIsA?m.legsB:m.legsA;
-      legsA+=la; legsB+=lb;
-      if(la>lb) winsA++; else if(lb>la) winsB++;
-      return `<div class="stat-bar-row" style="grid-template-columns:60px 1fr 60px"><div style="color:var(--muted)">Kolo ${m.kolo}</div><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px">${la} : ${lb}</div><div></div></div>`;
+      const winSide=matchWinnerSide(m);
+      const aWon = aIsA ? winSide==='a' : winSide==='b';
+      if(winSide!==null){ if(aWon) winsA++; else winsB++; }
+      let scoreLabel;
+      if(m.noShowA||m.noShowB){
+        const noShowName=m.noShowA?m.a:m.b;
+        scoreLabel=`<span style="color:var(--muted);font-size:12px">${esc(noShowName.split(' ')[0])} NP/predao</span>`;
+      } else {
+        const la=aIsA?m.legsA:m.legsB, lb=aIsA?m.legsB:m.legsA;
+        legsA+=la; legsB+=lb;
+        scoreLabel=`${la} : ${lb}`;
+      }
+      return `<div class="stat-bar-row" style="grid-template-columns:60px 1fr 60px"><div style="color:var(--muted)">Kolo ${m.kolo}</div><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px">${scoreLabel}</div><div></div></div>`;
     }).join('');
     out.innerHTML=`<div style="display:flex;justify-content:center;align-items:center;gap:16px;padding:12px 0 8px;font-family:'Bebas Neue',sans-serif;font-size:28px">
         <span style="color:var(--gold)">${winsA}</span><span style="color:var(--muted);font-size:13px;font-family:'Barlow',sans-serif">pobeda</span><span style="color:var(--gold)">${winsB}</span>
@@ -698,44 +721,103 @@
   function openLightbox(src){ document.getElementById('lightbox-img').src=src; document.getElementById('lightbox').classList.add('open'); }
   function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
 
+  // Slobodan unos mečeva po kolu - nije vezano samo za 4 najavljena para iz "Mečevi kola",
+  // jer se u praksi zna odigrati i više/drugačijih mečeva iste večeri.
+  let pendingMatches=[], pendingMatchesKolo=null;
+
+  function ensurePendingSeed(){
+    if(pendingMatchesKolo!==koloNum){
+      pendingMatches=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]).map(p=>({a:p[0],b:p[1],legsA:0,legsB:0,noShowA:false,noShowB:false}));
+      pendingMatchesKolo=koloNum;
+    }
+  }
+
+  // Pravilo bodovanja: pobeda=3, poraz(odigrano)=1, ne pojavi se/preda=0, pobeda preko volšeta=2
+  function computeMatchPoints(m){
+    if(m.noShowA && !m.noShowB) return {ptsA:0,ptsB:2};
+    if(m.noShowB && !m.noShowA) return {ptsA:2,ptsB:0};
+    if(m.noShowA && m.noShowB) return {ptsA:0,ptsB:0};
+    const la=m.legsA||0, lb=m.legsB||0;
+    if(la===lb) return {ptsA:1,ptsB:1};
+    return la>lb ? {ptsA:3,ptsB:1} : {ptsA:1,ptsB:3};
+  }
+  function matchWinnerSide(m){
+    if(m.noShowA && !m.noShowB) return 'b';
+    if(m.noShowB && !m.noShowA) return 'a';
+    if((m.legsA||0)===(m.legsB||0)) return null;
+    return (m.legsA||0)>(m.legsB||0) ? 'a' : 'b';
+  }
+
   function renderResultsGrid(){
+    ensurePendingSeed();
     const grid=document.getElementById('results-grid');
     if(!grid) return;
-    const pairs=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]);
-    if(!pairs.length){
-      grid.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--muted);font-size:13px;background:var(--card)">Prvo unesite mečeve za ovo kolo u sekciji "Mečevi kola" iznad.</div>';
-      return;
+    if(!pendingMatches.length){
+      grid.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--muted);font-size:13px;background:var(--card)">Nema dodatih mečeva za ovo kolo. Dodaj ispod.</div>';
+    } else {
+      grid.innerHTML=pendingMatches.map((m,i)=>{
+        const pv=computeMatchPoints(m);
+        return `<div class="edit-cell" style="grid-column:1/-1">
+          <div class="edit-player-name">${esc(m.a)} <span style="color:var(--accent)">vs</span> ${esc(m.b)}
+            <button onclick="removePendingMatch(${i})" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1">✕</button>
+          </div>
+          <div class="edit-inputs" style="align-items:flex-start">
+            <div style="flex:1">
+              <input class="edit-input lw-inp" type="number" min="0" value="${m.legsA}" ${m.noShowA?'disabled':''} onchange="updatePendingMatch(${i},'legsA',this.value)">
+              <div class="edit-lbl">LEG ${esc(m.a.split(' ')[0])}</div>
+            </div>
+            <div style="flex:1">
+              <input class="edit-input lw-inp" type="number" min="0" value="${m.legsB}" ${m.noShowB?'disabled':''} onchange="updatePendingMatch(${i},'legsB',this.value)">
+              <div class="edit-lbl">LEG ${esc(m.b.split(' ')[0])}</div>
+            </div>
+            <div style="flex:1.4;font-size:11px;color:var(--text)">
+              <label style="display:block;cursor:pointer;margin-bottom:4px"><input type="checkbox" ${m.noShowA?'checked':''} onchange="togglePendingNoShow(${i},'A',this.checked)"> ${esc(m.a.split(' ')[0])} NP/predao</label>
+              <label style="display:block;cursor:pointer"><input type="checkbox" ${m.noShowB?'checked':''} onchange="togglePendingNoShow(${i},'B',this.checked)"> ${esc(m.b.split(' ')[0])} NP/predao</label>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--muted);margin-top:8px">Poeni → ${esc(m.a.split(' ')[0])}: <b style="color:var(--gold)">${pv.ptsA}</b> &nbsp;·&nbsp; ${esc(m.b.split(' ')[0])}: <b style="color:var(--gold)">${pv.ptsB}</b></div>
+        </div>`;
+      }).join('');
     }
-    grid.innerHTML=pairs.map((p,i)=>`
-      <div class="edit-cell" style="grid-column:1/-1">
-        <div class="edit-player-name">${esc(p[0])} <span style="color:var(--accent)">vs</span> ${esc(p[1])}</div>
-        <div class="edit-inputs">
-          <div style="flex:1"><input class="edit-input lw-inp" id="res-legsA-${i}" type="number" min="0" value="0"><div class="edit-lbl">LEG ${esc(p[0].split(' ')[0])}</div></div>
-          <div style="flex:1"><input class="edit-input lw-inp" id="res-legsB-${i}" type="number" min="0" value="0"><div class="edit-lbl">LEG ${esc(p[1].split(' ')[0])}</div></div>
-          <div style="flex:1"><input class="edit-input" id="res-ptsA-${i}" type="number" min="0" value="0"><div class="edit-lbl">BOD ${esc(p[0].split(' ')[0])}</div></div>
-          <div style="flex:1"><input class="edit-input" id="res-ptsB-${i}" type="number" min="0" value="0"><div class="edit-lbl">BOD ${esc(p[1].split(' ')[0])}</div></div>
-        </div>
-      </div>`).join('');
+    const names=players.map(p=>p.name);
+    const opts=names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
+    const aSel=document.getElementById('add-match-a'), bSel=document.getElementById('add-match-b');
+    if(aSel && !aSel.dataset.built){ aSel.innerHTML='<option value="">— Igrač A —</option>'+opts; aSel.dataset.built='1'; }
+    if(bSel && !bSel.dataset.built){ bSel.innerHTML='<option value="">— Igrač B —</option>'+opts; bSel.dataset.built='1'; }
+    const saveBtn=document.getElementById('save-results-btn');
+    if(saveBtn) saveBtn.textContent=`✓ Sačuvaj kolo (${pendingMatches.length} meč${pendingMatches.length===1?'':pendingMatches.length>=2&&pendingMatches.length<=4?'a':'eva'})`;
+  }
+
+  function updatePendingMatch(i,field,val){ pendingMatches[i][field]=parseInt(val)||0; renderResultsGrid(); }
+  function togglePendingNoShow(i,side,checked){
+    if(side==='A'){ pendingMatches[i].noShowA=checked; if(checked) pendingMatches[i].legsA=0; }
+    else { pendingMatches[i].noShowB=checked; if(checked) pendingMatches[i].legsB=0; }
+    renderResultsGrid();
+  }
+  function removePendingMatch(i){ pendingMatches.splice(i,1); renderResultsGrid(); }
+  function addPendingMatch(){
+    const a=document.getElementById('add-match-a')?.value, b=document.getElementById('add-match-b')?.value;
+    if(!a||!b||a===b){ alert('Izaberi dva različita igrača.'); return; }
+    pendingMatches.push({a,b,legsA:0,legsB:0,noShowA:false,noShowB:false});
+    renderResultsGrid();
   }
 
   function saveMatchResults(){
-    const pairs=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]);
-    if(!pairs.length){ alert('Nema unetih mečeva za ovo kolo.'); return; }
-    pairs.forEach((p,i)=>{
-      const legsA=parseInt(document.getElementById('res-legsA-'+i)?.value)||0;
-      const legsB=parseInt(document.getElementById('res-legsB-'+i)?.value)||0;
-      const ptsA=parseInt(document.getElementById('res-ptsA-'+i)?.value)||0;
-      const ptsB=parseInt(document.getElementById('res-ptsB-'+i)?.value)||0;
-      const pa=players.find(pl=>pl.name===p[0]);
-      const pb=players.find(pl=>pl.name===p[1]);
-      if(pa){ pa.pts+=ptsA; pa.lw=(pa.lw||0)+legsA; pa.ll=(pa.ll||0)+legsB; }
-      if(pb){ pb.pts+=ptsB; pb.lw=(pb.lw||0)+legsB; pb.ll=(pb.ll||0)+legsA; }
-      matches.push({kolo:koloNum, a:p[0], b:p[1], legsA, legsB, ptsA, ptsB});
+    if(!pendingMatches.length){ alert('Nema dodatih mečeva za ovo kolo.'); return; }
+    pendingMatches.forEach(m=>{
+      const pv=computeMatchPoints(m);
+      const pa=players.find(pl=>pl.name===m.a);
+      const pb=players.find(pl=>pl.name===m.b);
+      const played=!m.noShowA&&!m.noShowB;
+      if(pa){ pa.pts+=pv.ptsA; if(played){ pa.lw=(pa.lw||0)+(m.legsA||0); pa.ll=(pa.ll||0)+(m.legsB||0); } }
+      if(pb){ pb.pts+=pv.ptsB; if(played){ pb.lw=(pb.lw||0)+(m.legsB||0); pb.ll=(pb.ll||0)+(m.legsA||0); } }
+      matches.push({kolo:koloNum, a:m.a, b:m.b, legsA:m.legsA||0, legsB:m.legsB||0, noShowA:m.noShowA, noShowB:m.noShowB, ptsA:pv.ptsA, ptsB:pv.ptsB});
     });
     const s=sorted();
     const ranks={}; s.forEach((p,i)=>ranks[p.id]=i+1);
     archive.push({ kolo:koloNum, table:s.map(p=>({name:p.name,pts:p.pts,lw:p.lw||0,ll:p.ll||0})), ranks });
     koloNum++;
+    pendingMatches=[]; pendingMatchesKolo=null;
     renderAll(); saveData(); showFlash('save-success');
   }
 
@@ -906,7 +988,7 @@
     const potvrda=prompt('OVO BRIŠE SVE BODOVE I CIJELU ARHIVU SEZONE, nepovratno.\nUkucajte RESET (velikim slovima) da potvrdite:');
     if(potvrda!=='RESET') return;
     players=JSON.parse(JSON.stringify(DEFAULT_PLAYERS)); koloNum=1; koloMatchups={}; archive=[]; matches=[];
-    playoff={semis:[],final:null}; seasonStart='2026-09-09'; scheduleIntervalDays=7;
+    playoff={semis:[],final:null}; seasonStart='2026-09-04'; scheduleIntervalDays=7;
     renderAll(); renderEditGrid(); saveData();
   }
 

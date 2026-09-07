@@ -1,19 +1,57 @@
 {
   "players": [
-    {"id":"djordje",  "name":"Đorđe Trifunović", "pts":0, "lw":0, "ll":0, "bio":"Najvoli da svira TAMBURELO!"},
-    {"id":"milos",    "name":"Miloš Ivković",    "pts":0, "lw":0, "ll":0, "bio":"Ovaj mali je opasan!"},
-    {"id":"bojanm",   "name":"Bojan Majkić",     "pts":0, "lw":0, "ll":0, "bio":"Bato je inače Judo trener!"},
-    {"id":"dejan",    "name":"Dejan Marković",   "pts":0, "lw":0, "ll":0, "bio":"On je sa Oficirca!"},
-    {"id":"goran",    "name":"Goran Cimeša",     "pts":0, "lw":0, "ll":0, "bio":"Veteran, od boćanja su mu muda kao kugle!"},
-    {"id":"bojanp",   "name":"Bojan Milanović",  "pts":0, "lw":0, "ll":0, "bio":"Zna da napravi PROBLEMOVE!"},
-    {"id":"leonardo", "name":"Leonardo Giric",   "pts":0, "lw":0, "ll":0, "bio":"Zašto ga zovu Kenjac?"},
+    {"id":"djordje",  "name":"Đorđe Trifunović", "pts":4, "lw":3, "ll":2, "bio":"Najvoli da svira TAMBURELO!"},
+    {"id":"milos",    "name":"Miloš Ivković",    "pts":6, "lw":3, "ll":3, "bio":"Ovaj mali je opasan!"},
+    {"id":"bojanm",   "name":"Bojan Majkić",     "pts":8, "lw":4, "ll":1, "bio":"Bato je inače Judo trener!"},
+    {"id":"dejan",    "name":"Dejan Marković",   "pts":1, "lw":0, "ll":2, "bio":"On je sa Oficirca!"},
+    {"id":"goran",    "name":"Goran Cimeša",     "pts":1, "lw":1, "ll":2, "bio":"Veteran, od boćanja su mu muda kao kugle!"},
+    {"id":"bojanp",   "name":"Bojan Milanović",  "pts":3, "lw":2, "ll":1, "bio":"Zna da napravi PROBLEMOVE!"},
+    {"id":"leonardo", "name":"Leonardo Giric",   "pts":1, "lw":0, "ll":2, "bio":"Zašto ga zovu Kenjac?"},
     {"id":"dalibor",  "name":"Dalibor Giric",    "pts":0, "lw":0, "ll":0, "bio":"Smirena ruka!"}
   ],
-  "koloNum": 1,
-  "koloMatchups": {},
-  "matches": [],
-  "archive": [],
+  "koloNum": 2,
+  "koloMatchups": {
+    "1": [["Bojan Majkić","Dejan Marković"],["Bojan Milanović","Goran Cimeša"],["Leonardo Giric","Đorđe Trifunović"],["Dalibor Giric","Miloš Ivković"]],
+    "2": [["Đorđe Trifunović","Dalibor Giric"],["Miloš Ivković","Dejan Marković"],["Goran Cimeša","Leonardo Giric"],["Bojan Majkić","Bojan Milanović"]],
+    "3": [["Bojan Milanović","Dejan Marković"],["Leonardo Giric","Bojan Majkić"],["Dalibor Giric","Goran Cimeša"],["Miloš Ivković","Đorđe Trifunović"]],
+    "4": [["Dalibor Giric","Bojan Majkić"],["Goran Cimeša","Miloš Ivković"],["Bojan Milanović","Leonardo Giric"],["Dejan Marković","Đorđe Trifunović"]],
+    "5": [["Leonardo Giric","Dejan Marković"],["Đorđe Trifunović","Goran Cimeša"],["Dalibor Giric","Bojan Milanović"],["Miloš Ivković","Bojan Majkić"]],
+    "6": [["Bojan Majkić","Đorđe Trifunović"],["Bojan Milanović","Miloš Ivković"],["Leonardo Giric","Dalibor Giric"],["Dejan Marković","Goran Cimeša"]],
+    "7": [["Goran Cimeša","Bojan Majkić"],["Đorđe Trifunović","Bojan Milanović"],["Dejan Marković","Dalibor Giric"],["Miloš Ivković","Leonardo Giric"]],
+    "9": [["Leonardo Giric","Bojan Majkić"],["Đorđe Trifunović","Miloš Ivković"],["Bojan Milanović","Dejan Marković"],["Goran Cimeša","Dalibor Giric"]],
+    "10": [["Leonardo Giric","Dejan Marković"],["Bojan Majkić","Miloš Ivković"],["Bojan Milanović","Dalibor Giric"],["Đorđe Trifunović","Goran Cimeša"]],
+    "11": [["Leonardo Giric","Miloš Ivković"],["Bojan Majkić","Goran Cimeša"],["Dejan Marković","Dalibor Giric"],["Bojan Milanović","Đorđe Trifunović"]],
+    "12": [["Leonardo Giric","Dalibor Giric"],["Bojan Majkić","Bojan Milanović"],["Miloš Ivković","Goran Cimeša"],["Dejan Marković","Đorđe Trifunović"]],
+    "13": [["Leonardo Giric","Goran Cimeša"],["Miloš Ivković","Bojan Milanović"],["Dalibor Giric","Đorđe Trifunović"],["Dejan Marković","Bojan Majkić"]],
+    "14": [["Leonardo Giric","Đorđe Trifunović"],["Dalibor Giric","Bojan Majkić"],["Goran Cimeša","Bojan Milanović"],["Miloš Ivković","Dejan Marković"]],
+    "15": [["Leonardo Giric","Bojan Milanović"],["Dalibor Giric","Miloš Ivković"],["Đorđe Trifunović","Bojan Majkić"],["Goran Cimeša","Dejan Marković"]]
+  },
+  "matches": [
+    {"kolo":1,"a":"Bojan Majkić","b":"Dejan Marković","legsA":2,"legsB":0,"noShowA":false,"noShowB":false,"ptsA":3,"ptsB":1},
+    {"kolo":1,"a":"Bojan Milanović","b":"Goran Cimeša","legsA":2,"legsB":1,"noShowA":false,"noShowB":false,"ptsA":3,"ptsB":1},
+    {"kolo":1,"a":"Leonardo Giric","b":"Đorđe Trifunović","legsA":0,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":1,"ptsB":3},
+    {"kolo":1,"a":"Dalibor Giric","b":"Miloš Ivković","legsA":0,"legsB":0,"noShowA":true,"noShowB":false,"ptsA":0,"ptsB":2},
+    {"kolo":1,"a":"Bojan Majkić","b":"Bojan Milanović","legsA":0,"legsB":0,"noShowA":false,"noShowB":true,"ptsA":2,"ptsB":0},
+    {"kolo":1,"a":"Đorđe Trifunović","b":"Miloš Ivković","legsA":1,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":1,"ptsB":3},
+    {"kolo":1,"a":"Bojan Majkić","b":"Miloš Ivković","legsA":2,"legsB":1,"noShowA":false,"noShowB":false,"ptsA":3,"ptsB":1}
+  ],
+  "archive": [
+    {
+      "kolo": 1,
+      "table": [
+        {"name":"Bojan Majkić","pts":8,"lw":4,"ll":1},
+        {"name":"Miloš Ivković","pts":6,"lw":3,"ll":3},
+        {"name":"Đorđe Trifunović","pts":4,"lw":3,"ll":2},
+        {"name":"Bojan Milanović","pts":3,"lw":2,"ll":1},
+        {"name":"Goran Cimeša","pts":1,"lw":1,"ll":2},
+        {"name":"Dejan Marković","pts":1,"lw":0,"ll":2},
+        {"name":"Leonardo Giric","pts":1,"lw":0,"ll":2},
+        {"name":"Dalibor Giric","pts":0,"lw":0,"ll":0}
+      ],
+      "ranks": {"bojanm":1,"milos":2,"djordje":3,"bojanp":4,"goran":5,"dejan":6,"leonardo":7,"dalibor":8}
+    }
+  ],
   "playoff": { "semis": [], "final": null },
-  "seasonStart": "2026-09-09",
+  "seasonStart": "2026-09-04",
   "scheduleIntervalDays": 7
 }
