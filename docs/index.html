@@ -382,17 +382,8 @@
       </div>
       <div class="admin-section">
         <div class="admin-section-header"><h3>Rezultati mečeva kola</h3><span class="kolo-badge" id="kolo-badge">KOLO 1</span></div>
-        <div class="legend-row">Pobeda = 3 boda &nbsp;·&nbsp; Poraz (odigrano) = 1 bod &nbsp;·&nbsp; Ne pojavi se / preda = 0 bodova &nbsp;·&nbsp; Pobeda preko protivnika koji se ne pojavi/preda = 2 boda (volšet)</div>
-        <div class="edit-grid" id="results-grid"></div>
-        <div style="padding:14px 16px;border-top:1px dashed var(--border)">
-          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Dodaj meč (ne mora biti iz rasporeda)</div>
-          <div class="matchup-input-row" style="margin-bottom:0">
-            <select class="matchup-select" id="add-match-a"></select>
-            <div class="matchup-vs">VS</div>
-            <select class="matchup-select" id="add-match-b"></select>
-          </div>
-          <button class="save-kolo-btn" style="width:auto;margin:10px 0 0;padding:9px 18px" onclick="addPendingMatch()">+ Dodaj meč</button>
-        </div>
+        <div class="legend-row">1/4 finale: pobjeda = 2 boda, poraz = 0 &nbsp;·&nbsp; 1/2 finale: pobjeda = +1 bod &nbsp;·&nbsp; Finale: pobjeda = +2 boda &nbsp;·&nbsp; Ne pojavi se = 0 bodova, protivnik dobija bodove te runde kao da je pobijedio</div>
+        <div id="results-grid"></div>
         <button class="save-kolo-btn" id="save-results-btn" onclick="saveMatchResults()">✓ Sačuvaj kolo</button>
         <div class="save-success" id="save-success">✓ Kolo sačuvano!</div>
       </div>
@@ -647,10 +638,12 @@
       const realIdx=archive.length-1-idx;
       const rows=snap.table.map((p,i)=>`<tr><td style="color:var(--muted)">${i+1}.</td><td>${esc(p.name)}</td><td style="color:var(--gold);font-weight:700">${p.pts}</td><td style="color:var(--green)">${p.lw}</td><td style="color:var(--accent)">${p.ll}</td></tr>`).join('');
       const roundMatches=matches.filter(m=>m.kolo===snap.kolo);
+      const roundLabels={qf:'1/4',sf:'1/2',final:'FINALE'};
       const matchLine=m=>{
-        if(m.noShowA) return `🎯 ${esc(m.a)} <span style="color:var(--muted)">(NP/predao)</span> — ${esc(m.b)} pobeda (volšet)`;
-        if(m.noShowB) return `🎯 ${esc(m.a)} pobeda (volšet) — ${esc(m.b)} <span style="color:var(--muted)">(NP/predao)</span>`;
-        return `🎯 ${esc(m.a)} <b>${m.legsA}</b> : <b>${m.legsB}</b> ${esc(m.b)}`;
+        const rl=m.round?`<span style="color:var(--muted);font-size:11px">[${roundLabels[m.round]||''}]</span> `:'';
+        if(m.noShowA) return `${rl}🎯 ${esc(m.a)} <span style="color:var(--muted)">(NP/predao)</span> — ${esc(m.b)} pobeda`;
+        if(m.noShowB) return `${rl}🎯 ${esc(m.a)} pobeda — ${esc(m.b)} <span style="color:var(--muted)">(NP/predao)</span>`;
+        return `${rl}🎯 ${esc(m.a)} <b>${m.legsA}</b> : <b>${m.legsB}</b> ${esc(m.b)}`;
       };
       const matchesHtml=roundMatches.length?`<div class="archive-matches">${roundMatches.map(m=>`<div>${matchLine(m)}</div>`).join('')}</div>`:'';
       return `<div class="archive-round">
@@ -731,102 +724,132 @@
   function closeLightbox(){ document.getElementById('lightbox').classList.remove('open'); }
 
   // Slobodan unos mečeva po kolu - nije vezano samo za 4 najavljena para iz "Mečevi kola",
-  // jer se u praksi zna odigrati i više/drugačijih mečeva iste večeri.
-  let pendingMatches=[], pendingMatchesKolo=null;
+  // Svako kolo je mali eliminacioni turnir (8 igrača): 1/4 finale (4 meča) -> 1/2 finale (2 meča) -> finale (1 meč).
+  // Bodovi po rundi su fiksni (ne zavise od rezultata legova): 1/4=2, 1/2=+1, finale=+2. Ne pojavi se = 0, protivnik dobija bodove runde kao pobjednik.
+  const ROUND_POINTS = { qf:2, sf:1, final:2 };
+  let koloBracket=null, koloBracketKolo=null;
 
-  function ensurePendingSeed(){
-    if(pendingMatchesKolo!==koloNum){
-      pendingMatches=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]).map(p=>({a:p[0],b:p[1],legsA:0,legsB:0,noShowA:false,noShowB:false}));
-      pendingMatchesKolo=koloNum;
-    }
-  }
+  function emptyBracketMatch(a,b){ return {a,b,legsA:0,legsB:0,noShowA:false,noShowB:false}; }
 
-  // Pravilo bodovanja: pobeda=3, poraz(odigrano)=1, ne pojavi se/preda=0, pobeda preko volšeta=2
-  function computeMatchPoints(m){
-    if(m.noShowA && !m.noShowB) return {ptsA:0,ptsB:2};
-    if(m.noShowB && !m.noShowA) return {ptsA:2,ptsB:0};
-    if(m.noShowA && m.noShowB) return {ptsA:0,ptsB:0};
-    const la=m.legsA||0, lb=m.legsB||0;
-    if(la===lb) return {ptsA:1,ptsB:1};
-    return la>lb ? {ptsA:3,ptsB:1} : {ptsA:1,ptsB:3};
-  }
   function matchWinnerSide(m){
+    if(!m) return null;
     if(m.noShowA && !m.noShowB) return 'b';
     if(m.noShowB && !m.noShowA) return 'a';
     if((m.legsA||0)===(m.legsB||0)) return null;
     return (m.legsA||0)>(m.legsB||0) ? 'a' : 'b';
   }
+  function bracketMatchWinnerName(m){
+    const side=matchWinnerSide(m);
+    if(!side || !m) return null;
+    return side==='a'?m.a:m.b;
+  }
+
+  function ensureBracket(){
+    if(koloBracketKolo!==koloNum || !koloBracket){
+      const pairs=(koloMatchups[koloNum]||[]).filter(p=>p[0]&&p[1]).slice(0,4);
+      koloBracket = { qf: pairs.map(p=>emptyBracketMatch(p[0],p[1])), sf:[null,null], final:null };
+      koloBracketKolo=koloNum;
+    }
+    const w=[0,1,2,3].map(i=>bracketMatchWinnerName(koloBracket.qf[i]));
+    const sfPairs=[[w[0],w[1]],[w[2],w[3]]];
+    koloBracket.sf = sfPairs.map((pr,i)=>{
+      const [a,b]=pr;
+      if(!a||!b) return null;
+      const existing=koloBracket.sf[i];
+      if(existing && existing.a===a && existing.b===b) return existing;
+      return emptyBracketMatch(a,b);
+    });
+    const fa=bracketMatchWinnerName(koloBracket.sf[0]), fb=bracketMatchWinnerName(koloBracket.sf[1]);
+    if(fa && fb){
+      if(!(koloBracket.final && koloBracket.final.a===fa && koloBracket.final.b===fb)){
+        koloBracket.final = emptyBracketMatch(fa, fb);
+      }
+    } else {
+      koloBracket.final = null;
+    }
+  }
+
+  function getBracketMatch(roundKey, idx){ return roundKey==='final' ? koloBracket.final : koloBracket[roundKey][idx]; }
+  function updateBracketMatch(roundKey, idx, field, val){
+    const m=getBracketMatch(roundKey, idx); if(!m) return;
+    m[field]=parseInt(val)||0;
+    renderResultsGrid();
+  }
+  function toggleBracketNoShow(roundKey, idx, side, checked){
+    const m=getBracketMatch(roundKey, idx); if(!m) return;
+    if(side==='A'){ m.noShowA=checked; if(checked) m.legsA=0; } else { m.noShowB=checked; if(checked) m.legsB=0; }
+    renderResultsGrid();
+  }
+
+  function bracketRowHtml(m, roundKey, idx){
+    if(!m) return `<div class="edit-cell" style="grid-column:1/-1;color:var(--muted);font-size:12px">Čeka se ishod prethodne runde...</div>`;
+    const winner=bracketMatchWinnerName(m);
+    return `<div class="edit-cell" style="grid-column:1/-1">
+      <div class="edit-player-name">${esc(m.a)} <span style="color:var(--accent)">vs</span> ${esc(m.b)}</div>
+      <div class="edit-inputs" style="align-items:flex-start">
+        <div style="flex:1">
+          <input class="edit-input lw-inp" type="number" min="0" value="${m.legsA}" ${m.noShowA?'disabled':''} onchange="updateBracketMatch('${roundKey}',${idx},'legsA',this.value)">
+          <div class="edit-lbl">LEG ${esc(m.a.split(' ')[0])}</div>
+        </div>
+        <div style="flex:1">
+          <input class="edit-input lw-inp" type="number" min="0" value="${m.legsB}" ${m.noShowB?'disabled':''} onchange="updateBracketMatch('${roundKey}',${idx},'legsB',this.value)">
+          <div class="edit-lbl">LEG ${esc(m.b.split(' ')[0])}</div>
+        </div>
+        <div style="flex:1.4;font-size:11px">
+          <label style="display:block;cursor:pointer;margin-bottom:4px"><input type="checkbox" ${m.noShowA?'checked':''} onchange="toggleBracketNoShow('${roundKey}',${idx},'A',this.checked)"> ${esc(m.a.split(' ')[0])} NP</label>
+          <label style="display:block;cursor:pointer"><input type="checkbox" ${m.noShowB?'checked':''} onchange="toggleBracketNoShow('${roundKey}',${idx},'B',this.checked)"> ${esc(m.b.split(' ')[0])} NP</label>
+        </div>
+      </div>
+      ${winner?`<div style="font-size:11px;color:var(--green);margin-top:6px">✓ Prolazi: ${esc(winner)}</div>`:''}
+    </div>`;
+  }
 
   function renderResultsGrid(){
-    ensurePendingSeed();
+    ensureBracket();
     const grid=document.getElementById('results-grid');
     if(!grid) return;
-    if(!pendingMatches.length){
-      grid.innerHTML='<div style="grid-column:1/-1;padding:16px;color:var(--muted);font-size:13px;background:var(--card)">Nema dodatih mečeva za ovo kolo. Dodaj ispod.</div>';
-    } else {
-      grid.innerHTML=pendingMatches.map((m,i)=>{
-        const pv=computeMatchPoints(m);
-        return `<div class="edit-cell" style="grid-column:1/-1">
-          <div class="edit-player-name">${esc(m.a)} <span style="color:var(--accent)">vs</span> ${esc(m.b)}
-            <button onclick="removePendingMatch(${i})" style="float:right;background:none;border:none;color:var(--muted);cursor:pointer;font-size:15px;line-height:1">✕</button>
-          </div>
-          <div class="edit-inputs" style="align-items:flex-start">
-            <div style="flex:1">
-              <input class="edit-input lw-inp" type="number" min="0" value="${m.legsA}" ${m.noShowA?'disabled':''} onchange="updatePendingMatch(${i},'legsA',this.value)">
-              <div class="edit-lbl">LEG ${esc(m.a.split(' ')[0])}</div>
-            </div>
-            <div style="flex:1">
-              <input class="edit-input lw-inp" type="number" min="0" value="${m.legsB}" ${m.noShowB?'disabled':''} onchange="updatePendingMatch(${i},'legsB',this.value)">
-              <div class="edit-lbl">LEG ${esc(m.b.split(' ')[0])}</div>
-            </div>
-            <div style="flex:1.4;font-size:11px;color:var(--text)">
-              <label style="display:block;cursor:pointer;margin-bottom:4px"><input type="checkbox" ${m.noShowA?'checked':''} onchange="togglePendingNoShow(${i},'A',this.checked)"> ${esc(m.a.split(' ')[0])} NP/predao</label>
-              <label style="display:block;cursor:pointer"><input type="checkbox" ${m.noShowB?'checked':''} onchange="togglePendingNoShow(${i},'B',this.checked)"> ${esc(m.b.split(' ')[0])} NP/predao</label>
-            </div>
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:8px">Poeni → ${esc(m.a.split(' ')[0])}: <b style="color:var(--gold)">${pv.ptsA}</b> &nbsp;·&nbsp; ${esc(m.b.split(' ')[0])}: <b style="color:var(--gold)">${pv.ptsB}</b></div>
-        </div>`;
-      }).join('');
+    if(!koloBracket.qf.length){
+      grid.innerHTML='<div style="padding:16px;color:var(--muted);font-size:13px">Prvo unesite 4 para u "Mečevi kola" iznad.</div>';
+      return;
     }
-    const names=players.map(p=>p.name);
-    const opts=names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('');
-    const aSel=document.getElementById('add-match-a'), bSel=document.getElementById('add-match-b');
-    if(aSel && !aSel.dataset.built){ aSel.innerHTML='<option value="">— Igrač A —</option>'+opts; aSel.dataset.built='1'; }
-    if(bSel && !bSel.dataset.built){ bSel.innerHTML='<option value="">— Igrač B —</option>'+opts; bSel.dataset.built='1'; }
-    const saveBtn=document.getElementById('save-results-btn');
-    if(saveBtn) saveBtn.textContent=`✓ Sačuvaj kolo (${pendingMatches.length} meč${pendingMatches.length===1?'':pendingMatches.length>=2&&pendingMatches.length<=4?'a':'eva'})`;
-  }
-
-  function updatePendingMatch(i,field,val){ pendingMatches[i][field]=parseInt(val)||0; renderResultsGrid(); }
-  function togglePendingNoShow(i,side,checked){
-    if(side==='A'){ pendingMatches[i].noShowA=checked; if(checked) pendingMatches[i].legsA=0; }
-    else { pendingMatches[i].noShowB=checked; if(checked) pendingMatches[i].legsB=0; }
-    renderResultsGrid();
-  }
-  function removePendingMatch(i){ pendingMatches.splice(i,1); renderResultsGrid(); }
-  function addPendingMatch(){
-    const a=document.getElementById('add-match-a')?.value, b=document.getElementById('add-match-b')?.value;
-    if(!a||!b||a===b){ alert('Izaberi dva različita igrača.'); return; }
-    pendingMatches.push({a,b,legsA:0,legsB:0,noShowA:false,noShowB:false});
-    renderResultsGrid();
+    const roundHeader=label=>`<div style="grid-column:1/-1;padding:12px 16px 0;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-weight:700">${label}</div>`;
+    let html='<div class="edit-grid">';
+    html+=roundHeader('1/4 finale');
+    koloBracket.qf.forEach((m,i)=>{ html+=bracketRowHtml(m,'qf',i); });
+    html+=roundHeader('1/2 finale');
+    koloBracket.sf.forEach((m,i)=>{ html+=bracketRowHtml(m,'sf',i); });
+    html+=roundHeader('Finale');
+    html+=bracketRowHtml(koloBracket.final,'final',0);
+    html+='</div>';
+    grid.innerHTML=html;
   }
 
   function saveMatchResults(){
-    if(!pendingMatches.length){ alert('Nema dodatih mečeva za ovo kolo.'); return; }
-    pendingMatches.forEach(m=>{
-      const pv=computeMatchPoints(m);
+    ensureBracket();
+    const allSet = koloBracket.qf.every(m=>bracketMatchWinnerName(m)) && koloBracket.sf.every(m=>m && bracketMatchWinnerName(m)) && koloBracket.final && bracketMatchWinnerName(koloBracket.final);
+    if(!allSet){ alert('Popuni rezultate za sva 4 meča 1/4 finala, oba meča 1/2 finala i finale (bez nerešenih).'); return; }
+    const records=[
+      ...koloBracket.qf.map(m=>({round:'qf', m})),
+      ...koloBracket.sf.map(m=>({round:'sf', m})),
+      {round:'final', m:koloBracket.final}
+    ];
+    records.forEach(({round,m})=>{
+      const winner=bracketMatchWinnerName(m);
+      const bonus=ROUND_POINTS[round];
+      const ptsA = m.a===winner ? bonus : 0;
+      const ptsB = m.b===winner ? bonus : 0;
       const pa=players.find(pl=>pl.name===m.a);
       const pb=players.find(pl=>pl.name===m.b);
       const played=!m.noShowA&&!m.noShowB;
-      if(pa){ pa.pts+=pv.ptsA; if(played){ pa.lw=(pa.lw||0)+(m.legsA||0); pa.ll=(pa.ll||0)+(m.legsB||0); } }
-      if(pb){ pb.pts+=pv.ptsB; if(played){ pb.lw=(pb.lw||0)+(m.legsB||0); pb.ll=(pb.ll||0)+(m.legsA||0); } }
-      matches.push({kolo:koloNum, a:m.a, b:m.b, legsA:m.legsA||0, legsB:m.legsB||0, noShowA:m.noShowA, noShowB:m.noShowB, ptsA:pv.ptsA, ptsB:pv.ptsB});
+      if(pa){ pa.pts+=ptsA; if(played){ pa.lw=(pa.lw||0)+(m.legsA||0); pa.ll=(pa.ll||0)+(m.legsB||0); } }
+      if(pb){ pb.pts+=ptsB; if(played){ pb.lw=(pb.lw||0)+(m.legsB||0); pb.ll=(pb.ll||0)+(m.legsA||0); } }
+      matches.push({kolo:koloNum, round, a:m.a, b:m.b, legsA:m.legsA||0, legsB:m.legsB||0, noShowA:m.noShowA, noShowB:m.noShowB, ptsA, ptsB});
     });
     const s=sorted();
     const ranks={}; s.forEach((p,i)=>ranks[p.id]=i+1);
     archive.push({ kolo:koloNum, table:s.map(p=>({name:p.name,pts:p.pts,lw:p.lw||0,ll:p.ll||0})), ranks });
     koloNum++;
-    pendingMatches=[]; pendingMatchesKolo=null;
+    koloBracket=null; koloBracketKolo=null;
     renderAll(); saveData(); showFlash('save-success');
   }
 
