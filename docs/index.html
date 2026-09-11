@@ -75,6 +75,7 @@
     .blue-pill { background:rgba(58,134,255,0.15); border:1px solid rgba(58,134,255,0.35); color:var(--blue); font-size:10px; font-weight:700; padding:3px 8px; border-radius:20px; letter-spacing:1px; text-transform:uppercase; white-space:nowrap; }
     .star-wrap { position:relative; display:inline-block; cursor:default; }
     .star-icon { color:var(--gold); font-size:13px; line-height:1; }
+    .badge-icon { width:17px; height:17px; object-fit:cover; border-radius:3px; vertical-align:middle; border:1px solid var(--border2); }
     .star-tooltip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:rgba(18,18,30,0.97); border:1px solid var(--border2); color:var(--gold); font-size:11px; font-weight:500; padding:5px 10px; border-radius:6px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .15s; z-index:50; }
     .star-wrap:hover .star-tooltip { opacity:1; }
     .trend { font-size:11px; margin-left:4px; }
@@ -452,6 +453,14 @@
     'milos':['Pobjednik 3. Pikado Invenda Lige','Pobjednik 4. Pikado Invenda Lige'],
   };
   const REIGNING_CHAMPION_ID = 'milos'; // pobjednik poslednje odigrane lige (4.) - nosi krunu, nezavisno od trenutne tabele
+  const PLAYER_BADGES = {
+    'dejan': { img:'images/gajba-piva.jpg', tooltip:'Uvek nosi gajbu piva!' },
+  };
+  function badgeHtml(id){
+    const b=PLAYER_BADGES[id];
+    if(!b) return '';
+    return `<span class="star-wrap"><img class="badge-icon" src="${esc(b.img)}" alt=""><span class="star-tooltip">${esc(b.tooltip)}</span></span>`;
+  }
 
   function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
@@ -570,7 +579,7 @@
       const status=isPlayoff?'<span class="playoff-pill">Playoff</span>':isBarraz?'<span class="barraz-pill">Baraž</span>':'<span style="color:var(--muted)">—</span>';
       return `<div class="lb-row${rowClass}">
         <div class="lb-rank ${rankClass(rank)}">${rank}</div>
-        <div class="lb-name">${p.id===REIGNING_CHAMPION_ID?'👑 ':''}${esc(p.name)}${starsHtml(p.id)}${trend}</div>
+        <div class="lb-name">${p.id===REIGNING_CHAMPION_ID?'👑 ':''}${esc(p.name)}${starsHtml(p.id)}${badgeHtml(p.id)}${trend}</div>
         <div class="lb-pts" style="color:${ptsColor}">${p.pts}</div>
         <div class="col-center" style="color:var(--green)">${p.lw||0}</div>
         <div class="col-center" style="color:var(--accent)">${p.ll||0}</div>
@@ -586,7 +595,7 @@
       const rank=i+1;
       const avatar=`<div class="player-avatar ${avClass(rank)}"><img src="images/${esc(p.id)}.jpg" alt="${esc(p.name)}" onerror="this.onerror=null;this.style.display='none';this.parentElement.textContent='${initials(p.name)}';"></div>`;
       return `<div class="player-card">${p.id===REIGNING_CHAMPION_ID?'<div class="crown-badge">👑</div>':''}${avatar}
-        <div class="player-name">${esc(p.name)}${starsHtml(p.id)}</div>
+        <div class="player-name">${esc(p.name)}${starsHtml(p.id)}${badgeHtml(p.id)}</div>
         <div class="player-pts">${p.pts}</div><div class="player-pts-label">bodova</div>
         <div class="player-mini-stats"><span style="color:var(--green)">LW ${p.lw||0}</span><span style="color:var(--accent)">LL ${p.ll||0}</span></div>
         <div class="player-bio">${esc(p.bio||'')}</div></div>`;
