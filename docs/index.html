@@ -12,6 +12,8 @@
       --accent:#e63946; --green:#2dc653; --blue:#3a86ff;
       --text:#f0f0f0; --muted:#7a7a9a;
       --border:rgba(255,255,255,0.07); --border2:rgba(255,255,255,0.12);
+      --shadow: 0 10px 28px rgba(0,0,0,0.38);
+      --shadow-sm: 0 4px 14px rgba(0,0,0,0.28);
     }
     * { box-sizing:border-box; margin:0; padding:0; }
     body {
@@ -32,40 +34,40 @@
     .logo-wrap { display:flex; align-items:center; gap:14px; }
     .logo-wrap img { height:42px; }
     .logo-text { line-height:1.1; }
-    .logo-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); }
+    .logo-title { font-family:'Bebas Neue',sans-serif; font-size:22px; letter-spacing:2px; color:var(--gold); text-shadow:0 0 18px rgba(240,180,41,0.35); }
     .logo-sub { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
     .header-right { display:flex; align-items:center; gap:12px; }
     #admin-badge { display:none; background:rgba(240,180,41,0.15); border:1px solid rgba(240,180,41,0.3); color:var(--gold); font-size:11px; font-weight:700; padding:4px 10px; border-radius:20px; letter-spacing:1px; }
     .hero { background:rgba(10,10,18,0.85); border-bottom:1px solid var(--border); padding:10px 24px; position:sticky; top:64px; z-index:98; backdrop-filter:blur(8px); }
     .hero-inner { max-width:960px; margin:0 auto; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
     .hero-kolo { font-family:'Barlow Condensed',sans-serif; font-size:12px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--gold); white-space:nowrap; }
-    .progress-track { flex:1; min-width:120px; height:6px; border-radius:3px; background:rgba(255,255,255,0.08); overflow:hidden; }
-    .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold2)); transition:width .4s; }
+    .progress-track { flex:1; min-width:120px; height:8px; border-radius:4px; background:rgba(255,255,255,0.08); overflow:hidden; box-shadow:inset 0 1px 3px rgba(0,0,0,0.4); }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold2)); transition:width .5s ease; box-shadow:0 0 10px rgba(240,180,41,0.5); }
     nav { background:rgba(10,10,18,0.95); border-bottom:1px solid var(--border); position:sticky; top:108px; z-index:99; backdrop-filter:blur(8px); }
     .nav-inner { max-width:960px; margin:0 auto; display:flex; overflow-x:auto; scrollbar-width:none; }
     .nav-inner::-webkit-scrollbar { display:none; }
-    .tab-btn { background:none; border:none; color:var(--muted); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:14px 16px; cursor:pointer; border-bottom:2px solid transparent; transition:all .2s; white-space:nowrap; }
-    .tab-btn:hover { color:var(--text); }
-    .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); }
+    .tab-btn { background:none; border:none; color:var(--muted); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:600; letter-spacing:1px; text-transform:uppercase; padding:14px 16px; cursor:pointer; border-bottom:2px solid transparent; border-radius:8px 8px 0 0; transition:all .2s; white-space:nowrap; }
+    .tab-btn:hover { color:var(--text); background:rgba(255,255,255,0.04); }
+    .tab-btn.active { color:var(--gold); border-bottom-color:var(--gold); background:linear-gradient(180deg,rgba(240,180,41,0.1),transparent); }
     main { max-width:960px; margin:0 auto; padding:24px 16px 60px; }
     .view { display:none; }
     @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:translateY(0)} }
     .view.active { display:block; animation:fadeIn .25s ease; }
-    .lb-card { background:rgba(18,18,30,0.92); border:1px solid var(--border2); border-radius:16px; overflow:hidden; backdrop-filter:blur(8px); }
-    .lb-card-header { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+    .lb-card { background:rgba(18,18,30,0.92); border:1px solid var(--border2); border-radius:16px; overflow:hidden; backdrop-filter:blur(8px); box-shadow:var(--shadow); }
+    .lb-card-header { padding:18px 24px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; border-left:3px solid var(--gold); }
     .lb-card-header h2 { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
-    .season-badge { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
+    .season-badge { font-size:11px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; background:rgba(255,255,255,0.04); padding:4px 10px; border-radius:20px; white-space:nowrap; }
     .lb-header-row, .lb-row { display:grid; grid-template-columns:40px 1fr 70px 60px 60px 60px 80px 70px; align-items:center; }
     .lb-header-row { padding:10px 20px; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--border); font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
-    .lb-row { padding:13px 20px; border-bottom:1px solid var(--border); transition:background .15s; }
+    .lb-row { padding:13px 20px; border-bottom:1px solid var(--border); transition:background .15s; box-shadow:inset 3px 0 0 transparent; }
     .lb-row:last-child { border-bottom:none; }
     .lb-row:hover { background:rgba(255,255,255,0.03); }
-    .lb-row.playoff { background:rgba(45,198,83,0.04); }
+    .lb-row.playoff { background:rgba(45,198,83,0.04); box-shadow:inset 3px 0 0 var(--green); }
     .lb-row.playoff:hover { background:rgba(45,198,83,0.07); }
-    .lb-row.barraz { background:rgba(240,180,41,0.04); }
+    .lb-row.barraz { background:rgba(240,180,41,0.04); box-shadow:inset 3px 0 0 var(--gold); }
     .lb-row.barraz:hover { background:rgba(240,180,41,0.07); }
     .lb-rank { font-family:'Bebas Neue',sans-serif; font-size:20px; color:var(--muted); }
-    .lb-rank.r1 { color:var(--gold); } .lb-rank.r2 { color:var(--silver); } .lb-rank.r3 { color:var(--bronze); }
+    .lb-rank.r1 { color:var(--gold); text-shadow:0 0 12px rgba(240,180,41,0.55); } .lb-rank.r2 { color:var(--silver); } .lb-rank.r3 { color:var(--bronze); }
     .lb-name { font-size:15px; font-weight:500; display:flex; align-items:center; gap:6px; }
     .lb-pts { font-family:'Bebas Neue',sans-serif; font-size:22px; text-align:center; }
     .col-center { text-align:center; font-family:'Barlow Condensed',sans-serif; font-size:16px; font-weight:600; }
@@ -81,22 +83,24 @@
     .trend { font-size:11px; margin-left:4px; }
     .trend.up { color:var(--green); } .trend.down { color:var(--accent); }
     .stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
-    .stat-card { background:rgba(18,18,30,0.9); border:1px solid var(--border2); border-radius:12px; padding:16px 18px; backdrop-filter:blur(8px); }
+    .stat-card { background:rgba(18,18,30,0.9); border:1px solid var(--border2); border-radius:12px; padding:16px 18px; backdrop-filter:blur(8px); box-shadow:var(--shadow-sm); transition:transform .2s,border-color .2s; }
+    .stat-card:hover { transform:translateY(-2px); border-color:rgba(240,180,41,0.3); }
     .stat-label { font-size:10px; color:var(--muted); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:6px; }
     .stat-val { font-family:'Bebas Neue',sans-serif; font-size:32px; line-height:1; color:var(--gold); }
     .stat-sub { font-size:11px; color:var(--muted); margin-top:3px; }
     .matchup-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:16px; }
-    .matchup-card { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:10px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; }
+    .matchup-card { background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:14px 16px; display:flex; align-items:center; gap:10px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:600; box-shadow:var(--shadow-sm); transition:transform .2s,border-color .2s; }
+    .matchup-card:hover { transform:translateY(-2px); border-color:rgba(240,180,41,0.25); }
     .vs-badge { background:rgba(230,57,70,0.15); color:var(--accent); font-size:11px; font-weight:700; padding:2px 7px; border-radius:4px; flex-shrink:0; }
     .players-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:14px; }
-    .player-card { position:relative; background:rgba(18,18,30,0.92); border:1px solid var(--border2); border-radius:12px; padding:20px 16px; text-align:center; backdrop-filter:blur(8px); transition:transform .2s,border-color .2s; }
-    .player-card:hover { transform:translateY(-2px); border-color:rgba(240,180,41,0.3); }
+    .player-card { position:relative; background:rgba(18,18,30,0.92); border:1px solid var(--border2); border-radius:12px; padding:20px 16px; text-align:center; backdrop-filter:blur(8px); box-shadow:var(--shadow-sm); transition:transform .2s,border-color .2s,box-shadow .2s; }
+    .player-card:hover { transform:translateY(-4px); border-color:rgba(240,180,41,0.3); box-shadow:var(--shadow); }
     .crown-badge { position:absolute; top:6px; left:50%; transform:translateX(-50%); font-size:20px; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.5)); }
     .player-avatar { width:80px; height:80px; border-radius:50%; margin:0 auto 12px; overflow:hidden; display:flex; align-items:center; justify-content:center; font-family:'Bebas Neue',sans-serif; font-size:28px; }
     .player-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
-    .av-gold { background:rgba(240,180,41,0.15); border:2px solid var(--gold); color:var(--gold); }
-    .av-silver { background:rgba(168,178,193,0.15); border:2px solid var(--silver); color:var(--silver); }
-    .av-bronze { background:rgba(205,127,64,0.15); border:2px solid var(--bronze); color:var(--bronze); }
+    .av-gold { background:rgba(240,180,41,0.15); border:2px solid var(--gold); color:var(--gold); box-shadow:0 0 18px rgba(240,180,41,0.3); }
+    .av-silver { background:rgba(168,178,193,0.15); border:2px solid var(--silver); color:var(--silver); box-shadow:0 0 14px rgba(168,178,193,0.2); }
+    .av-bronze { background:rgba(205,127,64,0.15); border:2px solid var(--bronze); color:var(--bronze); box-shadow:0 0 14px rgba(205,127,64,0.2); }
     .av-default { background:rgba(255,255,255,0.07); border:2px solid var(--border2); color:var(--muted); }
     .player-name { font-size:14px; font-weight:600; margin-bottom:4px; }
     .player-pts { font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--gold); line-height:1; }
@@ -114,20 +118,20 @@
     .stream-box { width:100%; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:#0e0e1a; display:flex; align-items:center; justify-content:center; }
     .stream-offline-text { text-align:center; }
     .login-wrap { display:flex; align-items:center; justify-content:center; min-height:400px; }
-    .login-card { background:var(--card); border:1px solid var(--border2); border-radius:16px; padding:36px 32px; width:340px; text-align:center; }
-    .login-icon { font-size:40px; margin-bottom:14px; }
+    .login-card { background:var(--card); border:1px solid var(--border2); border-radius:16px; padding:36px 32px; width:340px; text-align:center; box-shadow:var(--shadow); }
+    .login-icon { font-size:40px; margin-bottom:14px; filter:drop-shadow(0 0 16px rgba(240,180,41,0.35)); }
     .login-card h2 { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:700; letter-spacing:1px; margin-bottom:6px; }
     .login-card p { font-size:13px; color:var(--muted); margin-bottom:20px; }
     .login-card input { width:100%; padding:10px 14px; background:rgba(255,255,255,0.06); border:1px solid var(--border2); border-radius:8px; color:var(--text); font-size:15px; outline:none; margin-bottom:10px; transition:border-color .2s; }
     .login-card input:focus { border-color:rgba(240,180,41,0.4); }
-    .btn-login { width:100%; padding:11px; background:var(--gold); color:#000; border:none; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
-    .btn-login:hover { background:var(--gold2); }
+    .btn-login { width:100%; padding:11px; background:var(--gold); color:#000; border:none; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 4px 14px rgba(240,180,41,0.25); }
+    .btn-login:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 6px 18px rgba(240,180,41,0.35); }
     .login-error { color:var(--accent); font-size:12px; margin-bottom:10px; display:none; }
     .login-hint { font-size:11px; color:var(--muted); margin-top:14px; }
     .login-info { font-size:11px; color:var(--muted); background:rgba(58,134,255,0.08); border:1px solid rgba(58,134,255,0.2); border-radius:8px; padding:10px 12px; margin-bottom:14px; text-align:left; line-height:1.5; }
     .login-loading { font-size:12px; color:var(--gold); margin-bottom:10px; display:none; }
     .admin-panel { display:none; }
-    .admin-section { background:var(--card); border:1px solid var(--border2); border-radius:12px; margin-bottom:20px; overflow:hidden; }
+    .admin-section { background:var(--card); border:1px solid var(--border2); border-radius:12px; margin-bottom:20px; overflow:hidden; box-shadow:var(--shadow-sm); }
     .admin-section-header { padding:14px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
     .admin-section-header h3 { font-family:'Barlow Condensed',sans-serif; font-size:15px; font-weight:700; letter-spacing:1px; text-transform:uppercase; }
     .kolo-badge { background:rgba(240,180,41,0.15); color:var(--gold); font-size:11px; font-weight:600; padding:4px 12px; border-radius:20px; border:1px solid rgba(240,180,41,0.3); letter-spacing:.5px; }
@@ -147,8 +151,8 @@
     .matchup-input-row { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin-bottom:10px; }
     .matchup-select { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--border2); border-radius:6px; padding:8px 10px; color:var(--text); font-family:'Barlow',sans-serif; font-size:13px; outline:none; cursor:pointer; }
     .matchup-vs { font-family:'Bebas Neue',sans-serif; font-size:14px; color:var(--accent); letter-spacing:1px; text-align:center; }
-    .save-kolo-btn { display:block; width:calc(100% - 32px); margin:12px 16px 16px; padding:11px; background:var(--gold); color:#000; border:none; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s; }
-    .save-kolo-btn:hover { background:var(--gold2); }
+    .save-kolo-btn { display:block; width:calc(100% - 32px); margin:12px 16px 16px; padding:11px; background:var(--gold); color:#000; border:none; border-radius:8px; font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:700; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:background .2s,transform .15s,box-shadow .2s; box-shadow:0 4px 14px rgba(240,180,41,0.2); }
+    .save-kolo-btn:hover { background:var(--gold2); transform:translateY(-1px); box-shadow:0 6px 18px rgba(240,180,41,0.3); }
     .save-success { text-align:center; color:var(--green); font-size:12px; font-weight:600; padding:0 0 12px; display:none; }
     .legend-row { padding:8px 16px 4px; font-size:11px; color:var(--muted); }
     .logout-btn { padding:10px 20px; background:transparent; border:1px solid var(--border2); border-radius:8px; color:var(--muted); font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:600; letter-spacing:1px; text-transform:uppercase; cursor:pointer; transition:all .2s; margin-bottom:20px; margin-right:8px; }
@@ -173,11 +177,12 @@
     .stat-bar-track { height:8px; background:rgba(255,255,255,0.06); border-radius:4px; overflow:hidden; }
     .stat-bar-fill { height:100%; border-radius:4px; transition:width .4s; }
     .bracket-semis { display:flex; gap:16px; flex-wrap:wrap; justify-content:center; }
-    .bracket-match { background:var(--card2); border:1px solid var(--border2); border-radius:10px; padding:14px 16px; min-width:220px; flex:1; max-width:280px; }
+    .bracket-match { background:var(--card2); border:1px solid var(--border2); border-radius:10px; padding:14px 16px; min-width:220px; flex:1; max-width:280px; box-shadow:var(--shadow-sm); }
     .bm-row { display:flex; justify-content:space-between; padding:5px 0; font-size:14px; font-weight:500; }
     .bm-row.winner { color:var(--green); font-weight:700; }
     .h2h-picker { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin-bottom:16px; }
     footer { text-align:center; padding:24px; font-size:12px; color:var(--muted); border-top:1px solid var(--border); margin-top:40px; }
+    .stat-icon { font-size:16px; margin-right:5px; opacity:.85; }
     @media (max-width:600px) {
       .lb-header-row, .lb-row { grid-template-columns:32px 1fr 54px 48px 48px 48px 64px 54px; padding:8px 10px; font-size:12px; }
       .stats-row { grid-template-columns:repeat(2,1fr); }
@@ -266,7 +271,7 @@
     <div class="lb-card" style="margin-bottom:20px">
       <div class="lb-card-header"><h2>Mečevi kola</h2><span class="season-badge" id="mecevi-kolo-label">· Kolo 1</span></div>
       <div class="matchup-grid" id="mecevi-grid">
-        <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px">Mečevi još nisu objavljeni. Pratite Admin panel.</div>
+        <div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px"><div style="font-size:32px;margin-bottom:8px;opacity:.6">🎯</div>Mečevi još nisu objavljeni. Pratite Admin panel.</div>
       </div>
     </div>
     <div class="lb-card">
@@ -288,7 +293,7 @@
     <div class="lb-card">
       <div class="lb-card-header"><h2>Arhiva kola</h2><span class="season-badge">· Rezultati svih odigranih kola</span></div>
       <div id="archive-body">
-        <div style="text-align:center;color:var(--muted);padding:40px;font-size:13px">Još nema arhiviranih kola.</div>
+        <div style="text-align:center;color:var(--muted);padding:40px;font-size:13px"><div style="font-size:32px;margin-bottom:8px;opacity:.6">📜</div>Još nema arhiviranih kola.</div>
       </div>
     </div>
   </div>
@@ -405,7 +410,7 @@
   <img id="lightbox-img" src="" alt="">
 </div>
 
-<footer><p>© Peta Pikado INVENDA Liga 2026–2027</p></footer>
+<footer><p>🎯 © Peta Pikado INVENDA Liga 2026–2027</p></footer>
 
 <script>
   // GitHub repo gdje se čuvaju podaci. Token se kuca pri loginu, NIKAD ne ide ovdje u kod.
@@ -550,10 +555,10 @@
   function renderStats(){
     const s=sorted(); const odigrana=koloNum-1; const preostala=Math.max(0,TOTAL_KOLA-odigrana);
     document.getElementById('stats-grid').innerHTML=`
-      <div class="stat-card"><div class="stat-label">Lider</div><div class="stat-val" style="font-size:20px;font-family:'Barlow Condensed';font-weight:800">${esc(s[0].name.split(' ')[0])}</div><div class="stat-sub">${s[0].pts} bodova</div></div>
-      <div class="stat-card"><div class="stat-label">Igrača</div><div class="stat-val">${players.length}</div><div class="stat-sub">u ligi</div></div>
-      <div class="stat-card"><div class="stat-label">Odigranih kola</div><div class="stat-val">${odigrana}</div><div class="stat-sub">od ${TOTAL_KOLA} ukupno</div></div>
-      <div class="stat-card"><div class="stat-label">Preostalo kola</div><div class="stat-val" style="color:var(--accent)">${preostala}</div><div class="stat-sub">do kraja sezone</div></div>`;
+      <div class="stat-card"><div class="stat-label"><span class="stat-icon">🏆</span>Lider</div><div class="stat-val" style="font-size:20px;font-family:'Barlow Condensed';font-weight:800">${esc(s[0].name.split(' ')[0])}</div><div class="stat-sub">${s[0].pts} bodova</div></div>
+      <div class="stat-card"><div class="stat-label"><span class="stat-icon">👥</span>Igrača</div><div class="stat-val">${players.length}</div><div class="stat-sub">u ligi</div></div>
+      <div class="stat-card"><div class="stat-label"><span class="stat-icon">✅</span>Odigranih kola</div><div class="stat-val">${odigrana}</div><div class="stat-sub">od ${TOTAL_KOLA} ukupno</div></div>
+      <div class="stat-card"><div class="stat-label"><span class="stat-icon">⏳</span>Preostalo kola</div><div class="stat-val" style="color:var(--accent)">${preostala}</div><div class="stat-sub">do kraja sezone</div></div>`;
   }
 
   function renderLeaderboard(){
@@ -599,7 +604,7 @@
     const mb=document.getElementById('matchup-kolo-badge'); if(mb) mb.textContent=`KOLO ${koloNum}`;
     const kb=document.getElementById('kolo-badge'); if(kb) kb.textContent=`KOLO ${koloNum}`;
     const grid=document.getElementById('mecevi-grid');
-    if(!m.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px">Mečevi još nisu objavljeni.</div>'; document.getElementById('stream-schedule').textContent='Pogledajte tab Mečevi za raspored.'; return; }
+    if(!m.length){ grid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:30px;font-size:13px"><div style="font-size:32px;margin-bottom:8px;opacity:.6">🎯</div>Mečevi još nisu objavljeni.</div>'; document.getElementById('stream-schedule').textContent='Pogledajte tab Mečevi za raspored.'; return; }
     grid.innerHTML=m.map(x=>`<div class="matchup-card"><span style="flex:1">${esc(x[0])}</span><span class="vs-badge">VS</span><span style="flex:1;text-align:right">${esc(x[1])}</span></div>`).join('');
     document.getElementById('stream-schedule').innerHTML=m.map(x=>`<div style="margin-bottom:4px">🎯 ${esc(x[0])} vs ${esc(x[1])}</div>`).join('');
   }
@@ -633,7 +638,7 @@
 
   function renderArchive(){
     const c=document.getElementById('archive-body');
-    if(!archive.length){ c.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:13px">Još nema arhiviranih kola.</div>'; return; }
+    if(!archive.length){ c.innerHTML='<div style="text-align:center;color:var(--muted);padding:40px;font-size:13px"><div style="font-size:32px;margin-bottom:8px;opacity:.6">📜</div>Još nema arhiviranih kola.</div>'; return; }
     c.innerHTML=[...archive].reverse().map((snap,idx)=>{
       const realIdx=archive.length-1-idx;
       const rows=snap.table.map((p,i)=>`<tr><td style="color:var(--muted)">${i+1}.</td><td>${esc(p.name)}</td><td style="color:var(--gold);font-weight:700">${p.pts}</td><td style="color:var(--green)">${p.lw}</td><td style="color:var(--accent)">${p.ll}</td></tr>`).join('');
@@ -908,7 +913,7 @@
     if(!body) return;
     const odigrana=koloNum-1;
     if(odigrana<TOTAL_KOLA){
-      body.innerHTML=`<div style="text-align:center;color:var(--muted);padding:30px;font-size:13px">Plej-of počinje po završetku regularnog dela · još ${TOTAL_KOLA-odigrana} kolo(a).</div>`;
+      body.innerHTML=`<div style="text-align:center;color:var(--muted);padding:30px;font-size:13px"><div style="font-size:32px;margin-bottom:8px;opacity:.6">🥇</div>Plej-of počinje po završetku regularnog dela · još ${TOTAL_KOLA-odigrana} kolo(a).</div>`;
       return;
     }
     const top4=sorted().slice(0,4);
