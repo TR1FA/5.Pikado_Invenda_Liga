@@ -1,15 +1,15 @@
 {
   "players": [
     {"id":"djordje",  "name":"Đorđe Trifunović", "pts":27, "lw":32, "ll":13, "bio":"Najvoli da svira TAMBURELO!"},
-    {"id":"milos",    "name":"Miloš Ivković",    "pts":14, "lw":21, "ll":17, "bio":"Ovaj mali je opasan!"},
-    {"id":"bojanm",   "name":"Bojan Majkić",     "pts":9, "lw":9, "ll":13, "bio":"Bato je inače Judo trener!"},
-    {"id":"dejan",    "name":"Dejan Marković",   "pts":14, "lw":18, "ll":12, "bio":"On je sa Oficirca!"},
-    {"id":"goran",    "name":"Goran Cimeša",     "pts":5, "lw":6, "ll":14, "bio":"Veteran, od boćanja su mu muda kao kugle!"},
-    {"id":"bojanp",   "name":"Bojan Milanović",  "pts":9, "lw":13, "ll":14, "bio":"Zna da napravi PROBLEMOVE!"},
-    {"id":"leonardo", "name":"Leonardo Giric",   "pts":4, "lw":2, "ll":11, "bio":"Zašto ga zovu Kenjac?"},
-    {"id":"dalibor",  "name":"Dalibor Giric",    "pts":2, "lw":4, "ll":11, "bio":"Smirena ruka!"}
+    {"id":"milos",    "name":"Miloš Ivković",    "pts":19, "lw":27, "ll":19, "bio":"Ovaj mali je opasan!"},
+    {"id":"bojanm",   "name":"Bojan Majkić",     "pts":12, "lw":14, "ll":17, "bio":"Bato je inače Judo trener!"},
+    {"id":"dejan",    "name":"Dejan Marković",   "pts":16, "lw":21, "ll":14, "bio":"On je sa Oficirca!"},
+    {"id":"goran",    "name":"Goran Cimeša",     "pts":5, "lw":6, "ll":16, "bio":"Veteran, od boćanja su mu muda kao kugle!"},
+    {"id":"bojanp",   "name":"Bojan Milanović",  "pts":9, "lw":14, "ll":16, "bio":"Zna da napravi PROBLEMOVE!"},
+    {"id":"leonardo", "name":"Leonardo Giric",   "pts":4, "lw":2, "ll":13, "bio":"Zašto ga zovu Kenjac?"},
+    {"id":"dalibor",  "name":"Dalibor Giric",    "pts":4, "lw":5, "ll":13, "bio":"Smirena ruka!"}
   ],
-  "koloNum": 8,
+  "koloNum": 9,
   "koloMatchups": {
     "1": [["Bojan Majkić","Dejan Marković"],["Bojan Milanović","Goran Cimeša"],["Leonardo Giric","Đorđe Trifunović"],["Dalibor Giric","Miloš Ivković"]],
     "2": [["Đorđe Trifunović","Dalibor Giric"],["Miloš Ivković","Dejan Marković"],["Goran Cimeša","Leonardo Giric"],["Bojan Majkić","Bojan Milanović"]],
@@ -76,7 +76,14 @@
     {"kolo":7,"round":"qf","a":"Miloš Ivković","b":"Leonardo Giric","legsA":2,"legsB":0,"noShowA":false,"noShowB":false,"ptsA":2,"ptsB":0},
     {"kolo":7,"round":"sf","a":"Bojan Majkić","b":"Đorđe Trifunović","legsA":1,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":0,"ptsB":1},
     {"kolo":7,"round":"sf","a":"Dejan Marković","b":"Miloš Ivković","legsA":0,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":0,"ptsB":1},
-    {"kolo":7,"round":"final","a":"Đorđe Trifunović","b":"Miloš Ivković","legsA":2,"legsB":1,"noShowA":false,"noShowB":false,"ptsA":2,"ptsB":0}
+    {"kolo":7,"round":"final","a":"Đorđe Trifunović","b":"Miloš Ivković","legsA":2,"legsB":1,"noShowA":false,"noShowB":false,"ptsA":2,"ptsB":0},
+    {"kolo":8,"round":"qf","a":"Đorđe Trifunović","b":"Dalibor Giric","legsA":0,"legsB":0,"noShowA":true,"noShowB":false,"ptsA":0,"ptsB":2},
+    {"kolo":8,"round":"qf","a":"Miloš Ivković","b":"Goran Cimeša","legsA":2,"legsB":0,"noShowA":false,"noShowB":false,"ptsA":2,"ptsB":0},
+    {"kolo":8,"round":"qf","a":"Dejan Marković","b":"Leonardo Giric","legsA":2,"legsB":0,"noShowA":false,"noShowB":false,"ptsA":2,"ptsB":0},
+    {"kolo":8,"round":"qf","a":"Bojan Milanović","b":"Bojan Majkić","legsA":1,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":0,"ptsB":2},
+    {"kolo":8,"round":"sf","a":"Dalibor Giric","b":"Miloš Ivković","legsA":1,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":0,"ptsB":1},
+    {"kolo":8,"round":"sf","a":"Dejan Marković","b":"Bojan Majkić","legsA":1,"legsB":2,"noShowA":false,"noShowB":false,"ptsA":0,"ptsB":1},
+    {"kolo":8,"round":"final","a":"Miloš Ivković","b":"Bojan Majkić","legsA":2,"legsB":1,"noShowA":false,"noShowB":false,"ptsA":2,"ptsB":0}
   ],
   "archive": [
     {
@@ -176,6 +183,20 @@
         {"name":"Dalibor Giric","pts":2,"lw":4,"ll":11}
       ],
       "ranks": {"djordje":1,"dejan":2,"milos":3,"bojanp":4,"bojanm":5,"goran":6,"leonardo":7,"dalibor":8}
+    },
+    {
+      "kolo": 8,
+      "table": [
+        {"name":"Đorđe Trifunović","pts":27,"lw":32,"ll":13},
+        {"name":"Miloš Ivković","pts":19,"lw":27,"ll":19},
+        {"name":"Dejan Marković","pts":16,"lw":21,"ll":14},
+        {"name":"Bojan Majkić","pts":12,"lw":14,"ll":17},
+        {"name":"Bojan Milanović","pts":9,"lw":14,"ll":16},
+        {"name":"Goran Cimeša","pts":5,"lw":6,"ll":16},
+        {"name":"Dalibor Giric","pts":4,"lw":5,"ll":13},
+        {"name":"Leonardo Giric","pts":4,"lw":2,"ll":13}
+      ],
+      "ranks": {"djordje":1,"milos":2,"dejan":3,"bojanm":4,"bojanp":5,"goran":6,"dalibor":7,"leonardo":8}
     }
   ],
   "playoff": { "semis": [], "final": null },
